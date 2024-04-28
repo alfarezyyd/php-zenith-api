@@ -20,7 +20,16 @@ return new class extends Migration
             $table->string('village', length: 10)->nullable(false);
             $table->string('urban_village', length: 255)->nullable(false);
             $table->string('sub_district', length: 255)->nullable(false);
-
+            $table->unsignedSmallInteger('expedition_city_id')->nullable(false);
+            $table->unsignedSmallInteger('expedition_province_id')->nullable(false);
+            $table->string('postal_code', length: 10)->nullable(false);
+            $table->string('note', length: 50)->nullable(false);
+            $table->string('receiver_name', length: 50)->nullable(false);
+            $table->string('telephone', length: 15)->nullable(false);
+            $table->unsignedBigInteger('user_id')->nullable(false);
+            $table->foreign('expedition_city_id')->references('id')->on('expedition_cities');
+            $table->foreign('expedition_province_id')->references('id')->on('expedition_provinces');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
