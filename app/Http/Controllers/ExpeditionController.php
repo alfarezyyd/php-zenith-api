@@ -87,6 +87,7 @@
       $validatedExpeditionSaveRequest = $expeditionSaveRequest->validated();
       $expeditionModel = Expedition::query()->findOrFail($expeditionId);
       $expeditionModel->fill($validatedExpeditionSaveRequest);
+      $expeditionModel->save();
       return response()
         ->json((new WebResponsePayload("Expedition updated successfully"))
           ->getJsonResource());
