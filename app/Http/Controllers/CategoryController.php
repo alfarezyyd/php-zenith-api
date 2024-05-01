@@ -87,8 +87,11 @@
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $categoryId)
     {
-      //
+      Category::query()->findOrFail($categoryId)->delete();
+      return response()
+        ->json((new WebResponsePayload("Category deleted successfully"))
+          ->getJsonResource());
     }
   }
