@@ -15,8 +15,8 @@
   Route::prefix('expeditions')->group(function () {
     Route::get('', [ExpeditionController::class, 'index']);
     Route::post('', [ExpeditionController::class, 'store']);
-    Route::put('', [ExpeditionController::class, 'update']);
-    Route::delete('', [ExpeditionController::class, 'destroy']);
+    Route::put('/{expeditionId}', [ExpeditionController::class, 'update']);
+    Route::delete('/{expeditionId}', [ExpeditionController::class, 'destroy']);
     Route::get('/sync-province', [ExpeditionController::class, 'syncThirdPartyProvince']);
     Route::get('/sync-city', [ExpeditionController::class, 'syncThirdPartyCity']);
   });

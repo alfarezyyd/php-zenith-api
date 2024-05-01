@@ -6,7 +6,7 @@
     /**
      * @throws \HttpResponseException
      */
-    function validateOperationState(bool $operationState): void
+    public function validateOperationState(bool $operationState): void
     {
       if (!$operationState) {
         throw new \HttpResponseException("Error occurred when to write", 400);

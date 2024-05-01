@@ -3,14 +3,14 @@
   namespace App\Http\Controllers;
 
   use App\Helpers\CommonHelper;
-  use App\Http\Requests\ExpeditionCreateRequest;
+  use App\Http\Requests\ExpeditionSaveRequest;
   use App\Models\Expedition;
   use App\Models\ExpeditionCity;
   use App\Models\ExpeditionProvince;
   use App\Payloads\WebResponsePayload;
   use HttpResponseException;
   use Illuminate\Http\Client\ConnectionException;
-  use Illuminate\Http\Request;
+  use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Http;
 
   class ExpeditionController extends Controller
@@ -52,16 +52,15 @@
      * Store a newly created resource in storage.
      * @throws HttpResponseException
      */
-    public function store(ExpeditionCreateRequest $expeditionCreateRequest): \Illuminate\Http\JsonResponse
+    public function store(ExpeditionSaveRequest $expeditionSaveRequest): JsonResponse
     {
-      $validatedExpeditionCreateRequest = $expeditionCreateRequest->validated();
-      $expeditionModel = new Expedition($validatedExpeditionCreateRequest);
+      $validatedExpeditionSaveRequest = $expeditionSaveRequest->validated();
+      $expeditionModel = new Expedition($validatedExpeditionSaveRequest);
       $saveState = $expeditionModel->save();
       $this->commonHelper->validateOperationState($saveState);
       return response()
         ->json((new WebResponsePayload("Expedition created successfully"))
-          ->getJsonResource())
-        ->setStatusCode(201);
+          ->getJsonResource())->setStatusCode(201);
     }
 
     /**
@@ -83,17 +82,25 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ExpeditionSaveRequest $expeditionSaveRequest, int $expeditionId): JsonResponse
     {
-      //
+      $validatedExpeditionSaveRequest = $expeditionSaveRequest->validated();
+      $expeditionModel = Expedition::query()->findOrFail($expeditionId);
+      $expeditionModel->fill($validatedExpeditionSaveRequest);
+      return response()
+        ->json((new WebResponsePayload("Expedition updated successfully"))
+          ->getJsonResource());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $expeditionId): JsonResponse
     {
-      //
+      Expedition::query()->findOrFail($expeditionId)->delete();
+      return response()
+        ->json((new WebResponsePayload("Expedition deleted successfully"))
+          ->getJsonResource());
     }
 
     /**
