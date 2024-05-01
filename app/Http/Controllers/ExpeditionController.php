@@ -4,7 +4,6 @@
 
   use App\Helpers\CommonHelper;
   use App\Http\Requests\ExpeditionCreateRequest;
-  use App\Http\Resources\WebResponseCollection;
   use App\Models\Expedition;
   use App\Models\ExpeditionCity;
   use App\Models\ExpeditionProvince;
@@ -59,8 +58,10 @@
       $expeditionModel = new Expedition($validatedExpeditionCreateRequest);
       $saveState = $expeditionModel->save();
       $this->commonHelper->validateOperationState($saveState);
-      $webResponsePayload = new WebResponsePayload('Expedition created successfully.');
-      return response()->json($webResponsePayload->getJsonResource())->setStatusCode(201);
+      return response()
+        ->json((new WebResponsePayload("Expedition created successfully"))
+          ->getJsonResource())
+        ->setStatusCode(201);
     }
 
     /**
