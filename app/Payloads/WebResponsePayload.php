@@ -17,7 +17,7 @@
      * @param mixed $errorInformation
      * @param mixed $dataPaging
      */
-    public function __construct(mixed $responseMessage, ?JsonResource $jsonResource = null,  mixed $errorInformation = null, mixed $dataPaging = null)
+    public function __construct(mixed $responseMessage, mixed $errorInformation = null, ?JsonResource $jsonResource = null, mixed $dataPaging = null)
     {
       $this->jsonResource = $jsonResource;
       $this->responseMessage = $responseMessage;
