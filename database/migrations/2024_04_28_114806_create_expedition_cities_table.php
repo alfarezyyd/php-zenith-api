@@ -11,7 +11,7 @@
         public function up(): void
         {
             Schema::create('expedition_cities', function (Blueprint $table) {
-                $table->unsignedSmallInteger('id')->primary()->autoIncrement();
+                $table->unsignedSmallInteger('id')->primary();
                 $table->enum('type', ['KOTA', 'KABUPATEN'])->nullable(false);
                 $table->string('name', length: 255)->nullable(false);
                 $table->string('postal_code', length: 10)->nullable(false);

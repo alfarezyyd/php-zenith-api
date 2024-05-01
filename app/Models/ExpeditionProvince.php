@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ExpeditionProvince extends Model
 {
     use HasFactory;
+    protected $fillable = [
+      'id',
+      'name',
+      'created_at',
+      'updated_at'
+    ];
 }
