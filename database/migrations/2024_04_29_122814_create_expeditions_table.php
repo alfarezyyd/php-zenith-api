@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('expeditions', function (Blueprint $table) {
             $table->unsignedSmallInteger('id')->autoIncrement()->primary();
             $table->string('name', length: 255)->nullable(false);
-
             $table->timestamps();
         });
     }

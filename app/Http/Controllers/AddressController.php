@@ -1,17 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+  namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+  use App\Http\Requests\AddressCreateRequest;
+  use App\Models\Address;
+  use App\Models\ExpeditionProvince;
+  use Illuminate\Http\Request;
 
-class AddressController extends Controller
-{
+  class AddressController extends Controller
+  {
+    /**
+     * @param ExpeditionProvince $expeditionProvince
+     */
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+      //
     }
 
     /**
@@ -20,14 +28,17 @@ class AddressController extends Controller
     public function create()
     {
 
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AddressCreateRequest $addressCreateRequest)
     {
-        //
+      $validatedAddressCreateRequest = $addressCreateRequest->validated();
+      $addressModel = new Address($validatedAddressCreateRequest);
+      $addressModel->save();
     }
 
     /**
@@ -35,7 +46,7 @@ class AddressController extends Controller
      */
     public function show(string $id)
     {
-        //
+      //
     }
 
     /**
@@ -43,7 +54,7 @@ class AddressController extends Controller
      */
     public function edit(string $id)
     {
-        //
+      //
     }
 
     /**
@@ -51,7 +62,7 @@ class AddressController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+      //
     }
 
     /**
@@ -59,6 +70,6 @@ class AddressController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+      //
     }
-}
+  }

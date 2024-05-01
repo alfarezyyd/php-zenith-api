@@ -2,6 +2,10 @@
 
   namespace App\Http\Controllers;
 
+  use App\Helpers\CommonHelper;
+  use App\Http\Requests\ExpeditionCreateRequest;
+  use App\Http\Resources\WebResponseCollection;
+  use App\Models\Expedition;
   use App\Models\ExpeditionCity;
   use App\Models\ExpeditionProvince;
   use HttpResponseException;
@@ -13,15 +17,18 @@
   {
     private ExpeditionProvince $expeditionProvince;
     private ExpeditionCity $expeditionCity;
+    private CommonHelper $commonHelper;
 
     /**
      * @param ExpeditionProvince $expeditionProvince
      * @param ExpeditionCity $expeditionCity
+     * @param CommonHelper $commonHelper
      */
-    public function __construct(ExpeditionProvince $expeditionProvince, ExpeditionCity $expeditionCity)
+    public function __construct(ExpeditionProvince $expeditionProvince, ExpeditionCity $expeditionCity, CommonHelper $commonHelper)
     {
       $this->expeditionProvince = $expeditionProvince;
       $this->expeditionCity = $expeditionCity;
+      $this->commonHelper = $commonHelper;
     }
 
 
@@ -43,10 +50,15 @@
 
     /**
      * Store a newly created resource in storage.
+     * @throws HttpResponseException
      */
-    public function store(Request $request)
+    public function store(ExpeditionCreateRequest $expeditionCreateRequest)
     {
-      //
+      $validatedExpeditionCreateRequest = $expeditionCreateRequest->validated();
+      $expeditionModel = new Expedition($validatedExpeditionCreateRequest);
+      $saveState = $expeditionModel->save();
+      $this->commonHelper->validateOperationState($saveState);
+      return new WebResponseCollection(responseMessage: "Expedition create successfully");
     }
 
     /**
