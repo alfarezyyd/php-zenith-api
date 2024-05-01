@@ -22,11 +22,9 @@
     Route::get('/sync-city', [ExpeditionController::class, 'syncThirdPartyCity']);
   });
 
-    Route::prefix('categories')->group(function () {
+  Route::prefix('categories')->group(function () {
     Route::get('', [CategoryController::class, 'index']);
     Route::post('', [CategoryController::class, 'store']);
-    Route::put('/{expeditionId}', [CategoryController::class, 'update']);
-    Route::delete('/{expeditionId}', [CategoryController::class, 'destroy']);
-    Route::get('/sync-province', [CategoryController::class, 'syncThirdPartyProvince']);
-    Route::get('/sync-city', [CategoryController::class, 'syncThirdPartyCity']);
+    Route::put('/{categoryId}', [CategoryController::class, 'update']);
+    Route::delete('/{categoryId}', [CategoryController::class, 'destroy']);
   });

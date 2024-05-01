@@ -2,12 +2,9 @@
 
   namespace App\Http\Requests;
 
-  use Illuminate\Contracts\Validation\Validator;
   use Illuminate\Foundation\Http\FormRequest;
-  use Illuminate\Http\Exceptions\HttpResponseException;
-  use Illuminate\Validation\ValidationException;
 
-  class CategorySaveRequest extends FormRequest
+  class CategoryUpdateRequest extends FormRequest
   {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +22,7 @@
     public function rules(): array
     {
       return [
-        'name' => 'required|string|unique:categories,name',
+        'name' => 'required|string|max:255',
         'category_id' => 'integer|gt:0'
       ];
     }
