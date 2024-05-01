@@ -8,6 +8,7 @@
   use App\Models\Expedition;
   use App\Models\ExpeditionCity;
   use App\Models\ExpeditionProvince;
+  use App\Payloads\WebResponsePayload;
   use HttpResponseException;
   use Illuminate\Http\Client\ConnectionException;
   use Illuminate\Http\Request;
@@ -52,13 +53,14 @@
      * Store a newly created resource in storage.
      * @throws HttpResponseException
      */
-    public function store(ExpeditionCreateRequest $expeditionCreateRequest)
+    public function store(ExpeditionCreateRequest $expeditionCreateRequest): \Illuminate\Http\JsonResponse
     {
       $validatedExpeditionCreateRequest = $expeditionCreateRequest->validated();
       $expeditionModel = new Expedition($validatedExpeditionCreateRequest);
       $saveState = $expeditionModel->save();
       $this->commonHelper->validateOperationState($saveState);
-      return new WebResponseCollection(responseMessage: "Expedition create successfully");
+      $webResponsePayload = new WebResponsePayload('Expedition created successfully.');
+      return response()->json($webResponsePayload->getJsonResource())->setStatusCode(201);
     }
 
     /**

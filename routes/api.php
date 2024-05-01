@@ -11,5 +11,12 @@
   })->middleware('auth:sanctum')->withoutMiddleware(VerifyCsrfToken::class);
 
   Route::resource('addresses', AddressController::class);
-  Route::get('expeditions/sync-province', [ExpeditionController::class, 'syncThirdPartyProvince']);
-  Route::get('expeditions/sync-city', [ExpeditionController::class, 'syncThirdPartyCity']);
+
+  Route::prefix('expeditions')->group(function () {
+    Route::get('', [ExpeditionController::class, 'index']);
+    Route::post('', [ExpeditionController::class, 'store']);
+    Route::put('', [ExpeditionController::class, 'update']);
+    Route::delete('', [ExpeditionController::class, 'destroy']);
+    Route::get('/sync-province', [ExpeditionController::class, 'syncThirdPartyProvince']);
+    Route::get('/sync-city', [ExpeditionController::class, 'syncThirdPartyCity']);
+  });
