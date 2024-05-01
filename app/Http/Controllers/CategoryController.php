@@ -73,7 +73,7 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(CategoryUpdateRequest $categoryUpdateRequest, int $categoryId)
+    public function update(CategoryUpdateRequest $categoryUpdateRequest, int $categoryId): JsonResponse
     {
       $validatedCategorySaveRequest = $categoryUpdateRequest->validated();
       $categoryModel = Category::query()->findOrFail($categoryId);
@@ -87,7 +87,7 @@
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $categoryId)
+    public function destroy(string $categoryId): JsonResponse
     {
       Category::query()->findOrFail($categoryId)->delete();
       return response()
