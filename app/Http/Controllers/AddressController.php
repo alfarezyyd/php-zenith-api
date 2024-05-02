@@ -8,7 +8,6 @@
   use App\Models\ExpeditionProvince;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Http\JsonResponse;
-  use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
 
   class AddressController extends Controller
@@ -32,7 +31,6 @@
      */
     public function index()
     {
-      dd(Auth::user());
     }
 
     /**
@@ -50,7 +48,6 @@
      */
     public function store(AddressCreateRequest $addressCreateRequest): JsonResponse
     {
-      $loggedUser = Auth::user();
       $validatedAddressCreateRequest = $addressCreateRequest->validated();
       $validatedAddressCreateRequest['user_id'] = Auth::id();
       $addressModel = new Address($validatedAddressCreateRequest);
@@ -80,16 +77,24 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AddressCreateRequest $addressCreateRequest, int $addressesId): JsonResponse
     {
-      //
+      $validatedAddressCreateRequest = $addressCreateRequest->validated();
+      $validatedAddressCreateRequest['user_id'] = Auth::id();
+      Address::query()->findOrFail($addressesId)->fill($validatedAddressCreateRequest)->save();
+      return response()
+        ->json((new WebResponsePayload("Address updated successfully"))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(int $addressesId): JsonResponse
     {
-      //
+      Address::query()->findOrFail($addressesId)->where('user_id', Auth::id())->delete();
+      return response()
+        ->json((new WebResponsePayload("Address deleted successfully"))
+          ->getJsonResource())->setStatusCode(200);
     }
   }
