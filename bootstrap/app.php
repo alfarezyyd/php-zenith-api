@@ -19,21 +19,22 @@
     )
     ->withMiddleware(function (Middleware $middleware) {
       $middleware->validateCsrfTokens(
-        except: ['api/*']
+        except: ['api/*', 'login']
       );
 
       $middleware->web(append: [
         \App\Http\Middleware\HandleInertiaRequests::class,
         \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
       ]);
-      //
+      $middleware->statefulApi();
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
       $exceptions->render(function (ValidationException $validationException, Request $request) {
         return response()
-        ->json(
-          (new WebResponsePayload(responseMessage: "Validation error", errorInformation: $validationException->validator->getMessageBag()))
-          ->getJsonResource())->setStatusCode(400);
+          ->json(
+            (new WebResponsePayload(responseMessage: "Validation error", errorInformation: $validationException->validator->getMessageBag()))
+              ->getJsonResource())->setStatusCode(400);
       });
     })
     ->create();

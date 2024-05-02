@@ -3,15 +3,12 @@
   use App\Http\Controllers\AddressController;
   use App\Http\Controllers\CategoryController;
   use App\Http\Controllers\ExpeditionController;
-  use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Route;
 
   Route::get('/user', function (Request $request) {
     return $request->user();
-  })->middleware('auth:sanctum')->withoutMiddleware(VerifyCsrfToken::class);
-
-  Route::resource('addresses', AddressController::class);
+  })->middleware('auth:sanctum');
 
   Route::prefix('expeditions')->group(function () {
     Route::get('', [ExpeditionController::class, 'index']);
@@ -27,4 +24,12 @@
     Route::post('', [CategoryController::class, 'store']);
     Route::put('/{categoryId}', [CategoryController::class, 'update']);
     Route::delete('/{categoryId}', [CategoryController::class, 'destroy']);
+  });
+
+  Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+  ])->group(function () {
+    Route::resource('addresses', AddressController::class);
   });

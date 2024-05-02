@@ -1,5 +1,6 @@
 <?php
 
+  use App\Http\Controllers\AddressController;
   use Illuminate\Foundation\Application;
   use Illuminate\Support\Facades\Route;
   use Inertia\Inertia;
@@ -11,15 +12,20 @@
       'laravelVersion' => Application::VERSION,
       'phpVersion' => PHP_VERSION,
     ]);
-  })->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
+  });
 
   Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
   ])->group(function () {
+    Route::resource('addresses', AddressController::class);
     Route::get('/dashboard', function () {
       return Inertia::render('Dashboard');
     })->name('dashboard');
-  })->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class);
+  });
+
+  Route::middleware('auth:sanctum')->get('token', function () {
+    return auth()->user()->createToken('authToken')->plainTextToken;
+  });
 
