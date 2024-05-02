@@ -2,16 +2,29 @@
 
   namespace App\Http\Controllers;
 
+  use App\Helpers\CommonHelper;
   use App\Http\Requests\AddressCreateRequest;
   use App\Models\Address;
   use App\Models\ExpeditionProvince;
+  use App\Payloads\WebResponsePayload;
+  use Illuminate\Http\JsonResponse;
   use Illuminate\Http\Request;
+  use Illuminate\Support\Facades\Auth;
 
   class AddressController extends Controller
   {
     /**
      * @param ExpeditionProvince $expeditionProvince
      */
+    private CommonHelper $commonHelper;
+
+    /**
+     * @param CommonHelper $commonHelper
+     */
+    public function __construct(CommonHelper $commonHelper)
+    {
+      $this->commonHelper = $commonHelper;
+    }
 
 
     /**
@@ -19,7 +32,7 @@
      */
     public function index()
     {
-      //
+      dd(Auth::user());
     }
 
     /**
@@ -33,12 +46,19 @@
 
     /**
      * Store a newly created resource in storage.
+     * @throws \HttpResponseException
      */
-    public function store(AddressCreateRequest $addressCreateRequest)
+    public function store(AddressCreateRequest $addressCreateRequest): JsonResponse
     {
+      $loggedUser = Auth::user();
       $validatedAddressCreateRequest = $addressCreateRequest->validated();
+      $validatedAddressCreateRequest['user_id'] = Auth::id();
       $addressModel = new Address($validatedAddressCreateRequest);
-      $addressModel->save();
+      $saveState = $addressModel->save();
+      $this->commonHelper->validateOperationState($saveState);
+      return response()
+        ->json((new WebResponsePayload("Address created successfully"))
+          ->getJsonResource())->setStatusCode(201);
     }
 
     /**
