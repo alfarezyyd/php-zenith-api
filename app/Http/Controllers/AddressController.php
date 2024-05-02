@@ -4,6 +4,7 @@
 
   use App\Helpers\CommonHelper;
   use App\Http\Requests\AddressCreateRequest;
+  use App\Http\Resources\AddressResource;
   use App\Models\Address;
   use App\Models\ExpeditionProvince;
   use App\Payloads\WebResponsePayload;
@@ -29,8 +30,12 @@
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
+      $addressCollection = Address::query()->select()->where('user_id', Auth::id())->get();
+      return response()
+        ->json((new WebResponsePayload("Address retrieve successfully", jsonResource: new AddressResource($addressCollection)))
+          ->getJsonResource())->setStatusCode(201);
     }
 
     /**
