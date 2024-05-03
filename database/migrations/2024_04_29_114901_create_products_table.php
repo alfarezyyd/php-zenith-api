@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('condition', ['NEW', 'SECOND'])->default('NEW')->nullable(false);
             $table->text('description')->nullable(false);
             $table->unsignedInteger('price')->nullable(false);
-            $table->unsignedSmallInteger('minimum_order')->nullable(false);;
+            $table->unsignedSmallInteger('minimum_order')->nullable(false);
             $table->enum('status', ['ACTIVE', 'NON_ACTIVE'])->default('ACTIVE')->nullable(false);
             $table->unsignedMediumInteger('stock')->nullable(false);
             $table->string('sku', length: 50)->nullable(false);
