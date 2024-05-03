@@ -3,7 +3,7 @@
   namespace App\Http\Controllers;
 
   use App\Helpers\CommonHelper;
-  use App\Http\Requests\AddressCreateRequest;
+  use App\Http\Requests\AddressSaveRequest;
   use App\Http\Resources\AddressResource;
   use App\Models\Address;
   use App\Models\ExpeditionProvince;
@@ -51,7 +51,7 @@
      * Store a newly created resource in storage.
      * @throws \HttpResponseException
      */
-    public function store(AddressCreateRequest $addressCreateRequest): JsonResponse
+    public function store(AddressSaveRequest $addressCreateRequest): JsonResponse
     {
       $validatedAddressCreateRequest = $addressCreateRequest->validated();
       $validatedAddressCreateRequest['user_id'] = Auth::id();
@@ -82,7 +82,7 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(AddressCreateRequest $addressCreateRequest, int $addressesId): JsonResponse
+    public function update(AddressSaveRequest $addressCreateRequest, int $addressesId): JsonResponse
     {
       $validatedAddressCreateRequest = $addressCreateRequest->validated();
       $validatedAddressCreateRequest['user_id'] = Auth::id();
