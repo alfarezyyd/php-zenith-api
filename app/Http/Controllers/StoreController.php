@@ -7,6 +7,7 @@
   use App\Models\Store;
   use App\Payloads\WebResponsePayload;
   use HttpResponseException;
+  use Illuminate\Http\JsonResponse;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
@@ -44,7 +45,7 @@
      * Store a newly created resource in storage.
      * @throws HttpResponseException
      */
-    public function store(StoreSaveRequest $storeSaveRequest): \Illuminate\Http\JsonResponse
+    public function store(StoreSaveRequest $storeSaveRequest): JsonResponse
     {
       $validatedStoreSaveRequest = $storeSaveRequest->validated();
       $validatedStoreSaveRequest['user_id'] = Auth::id();
@@ -86,7 +87,7 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreSaveRequest $storeSaveRequest, int $storeId): \Illuminate\Http\JsonResponse
+    public function update(StoreSaveRequest $storeSaveRequest, int $storeId): JsonResponse
     {
       $validatedAddressCreateRequest = $storeSaveRequest->validated();
       $loggedUserId = Auth::id();
@@ -100,10 +101,10 @@
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $storeId)
+    public function destroy(int $storeId): JsonResponse
     {
       $loggedUserId = Auth::id();
-      $storeModel = Store::query()->findOrFail($storeId)->where('user_id', $loggedUserId)->delete();
+      Store::query()->findOrFail($storeId)->where('user_id', $loggedUserId)->delete();
       return response()
         ->json((new WebResponsePayload("Store deleted successfully"))
           ->getJsonResource())->setStatusCode(200);
