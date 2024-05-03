@@ -1,14 +1,14 @@
 <?php
 
+  use App\Http\Middleware\HandleInertiaRequests;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Foundation\Application;
   use Illuminate\Foundation\Configuration\Exceptions;
   use Illuminate\Foundation\Configuration\Middleware;
-  use Illuminate\Http\Exceptions\HttpResponseException;
+  use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
   use Illuminate\Http\Request;
   use Illuminate\Validation\ValidationException;
 
-  use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
   return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,8 +23,8 @@
       );
 
       $middleware->web(append: [
-        \App\Http\Middleware\HandleInertiaRequests::class,
-        \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+        HandleInertiaRequests::class,
+        AddLinkHeadersForPreloadedAssets::class,
       ]);
       $middleware->statefulApi();
 
@@ -35,6 +35,13 @@
           ->json(
             (new WebResponsePayload(responseMessage: "Validation error", errorInformation: $validationException->validator->getMessageBag()))
               ->getJsonResource())->setStatusCode(400);
+      });
+
+      $exceptions->render(function (Exception $exception, Request $request) {
+        return response()
+          ->json(
+            (new WebResponsePayload(responseMessage: "Error occured!", errorInformation: $exception->getMessage()))
+              ->getJsonResource())->setStatusCode($exception->getCode());
       });
     })
     ->create();
