@@ -11,8 +11,7 @@
     return $request->user();
   })->middleware('auth:sanctum');
 
-  Route::prefix('expeditions')
-    ->middleware([
+  Route::middleware([
       'auth:sanctum',
       config('jetstream.auth_session'),
       'verified',
@@ -33,7 +32,7 @@
         Route::delete('/{categoryId}', [CategoryController::class, 'destroy']);
       });
 
-      Route::prefix('address')->group(function () {
+      Route::prefix('addresses')->group(function () {
         Route::get('', [AddressController::class, 'index']);
         Route::post('', [AddressController::class, 'store']);
         Route::put('/{categoryId}', [AddressController::class, 'update']);

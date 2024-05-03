@@ -37,11 +37,5 @@
               ->getJsonResource())->setStatusCode(400);
       });
 
-      $exceptions->render(function (Exception $exception, Request $request) {
-        return response()
-          ->json(
-            (new WebResponsePayload(responseMessage: "Error occured!", errorInformation: $exception->getMessage()))
-              ->getJsonResource())->setStatusCode($exception->getCode());
-      });
     })
     ->create();
