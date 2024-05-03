@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('zip_code', length: 10)->nullable(false);
             $table->string('detail', length: 200)->nullable(false);
             $table->string('description', length: 140)->nullable(false);
-            $table->string('photo_path', length: 255)->nullable();
+            $table->string('image_path', length: 255)->nullable();
             $table->unsignedBigInteger('user_id')->nullable(false);
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
