@@ -10,7 +10,7 @@
      */
     public function up(): void
     {
-      Schema::create('products_categories', function (Blueprint $table) {
+      Schema::create('product_categories', function (Blueprint $table) {
         $table->id();
         $table->unsignedBigInteger('product_id')->nullable(false);
         $table->unsignedBigInteger('category_id')->nullable(false);
