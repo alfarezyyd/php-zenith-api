@@ -4,6 +4,7 @@
   use App\Http\Controllers\CartController;
   use App\Http\Controllers\CategoryController;
   use App\Http\Controllers\ExpeditionController;
+  use App\Http\Controllers\ProductController;
   use App\Http\Controllers\StoreController;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Route;
@@ -52,6 +53,13 @@
       Route::post('', [CartController::class, 'store']);
       Route::put('/{cardId}', [CartController::class, 'update']);
       Route::delete('/{cardId}', [CartController::class, 'destroy']);
+    });
+
+    Route::prefix('products')->group(function () {
+      Route::get('', [ProductController::class, 'index']);
+      Route::post('{storeId}', [ProductController::class, 'store']);
+      Route::put('/{productId}', [ProductController::class, 'update']);
+      Route::delete('/{productId}', [ProductController::class, 'destroy']);
     });
   });
 

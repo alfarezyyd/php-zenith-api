@@ -2,8 +2,8 @@
 
   namespace App\Enums;
 
-  enum ProductCondition
+  enum ProductCondition: string
   {
-    case NEW;
-    case SECOND;
+    case NEW = "New";
+    case SECOND = "Second";
   }

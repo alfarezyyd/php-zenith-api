@@ -6,10 +6,10 @@
   use App\Http\Requests\ProductSaveRequest;
   use App\Models\Product;
   use App\Payloads\WebResponsePayload;
-  use HttpResponseException;
+  use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
-  use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
+  use Illuminate\Support\Facades\DB;
 
   class ProductController extends Controller
   {
@@ -48,12 +48,23 @@
     {
       $validatedProductSaveRequest = $productSaveRequest->validated();
       $validatedProductSaveRequest['store_id'] = $storeId;
+      $validatedProductSaveRequest['slug'] = $this->commonHelper->slugifyString($validatedProductSaveRequest['name']);
       $productModel = new Product($validatedProductSaveRequest);
-      $saveState = $productModel->save();
-      $this->commonHelper->validateOperationState($saveState);
-      return response()
-        ->json((new WebResponsePayload("Category created successfully"))
-          ->getJsonResource())->setStatusCode(201);
+      try {
+        DB::beginTransaction();
+        $productModel->save();
+        DB::commit();
+        return response()
+          ->json((new WebResponsePayload("Product created successfully"))
+            ->getJsonResource())->setStatusCode(201);
+      } catch (\Throwable $throwable) {
+        DB::rollBack();
+        print($throwable->getMessage());
+        throw new HttpResponseException(response()->json(
+          (new WebResponsePayload("Internal server error", ))
+            ->getJsonResource())->setStatusCode(500)
+        );
+      }
     }
 
     /**
