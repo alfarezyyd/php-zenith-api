@@ -29,7 +29,7 @@
     {
       return [
         'data' => [
-          'value' => $this->jsonResource?->toJson(),
+          'value' => $this->jsonResource,
           'message' => $this->responseMessage,
         ],
         'errors' => $this->errorInformation,

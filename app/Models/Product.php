@@ -4,6 +4,7 @@
 
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\BelongsTo;
   use Illuminate\Database\Eloquent\Relations\BelongsToMany;
   use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -16,6 +17,7 @@
     protected $keyType = 'int';
     public $incrementing = true;
     public $timestamps = true;
+    protected $with = ['store'];
     protected $fillable = [
       'slug',
       'name',
@@ -40,5 +42,10 @@
     public function resources(): HasMany
     {
       return $this->hasMany(ProductResource::class, 'product_id', 'id');
+    }
+
+    public function store(): BelongsTo
+    {
+      return $this->belongsTo(Store::class, 'store_id', 'id');
     }
   }

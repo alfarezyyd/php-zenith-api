@@ -4,6 +4,8 @@
 
   use App\Helpers\CommonHelper;
   use App\Http\Requests\ProductSaveRequest;
+  use App\Http\Resources\ProductResource;
+  use App\Models\Category;
   use App\Models\Product;
   use App\Payloads\WebResponsePayload;
   use App\Services\ProductCategoryService;
@@ -24,15 +26,13 @@
      * @param CommonHelper $commonHelper
      * @param ProductResourceService $productResourceService
      * @param ProductCategoryService $productCategoryService
-     */public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService)
-  {
-    $this->commonHelper = $commonHelper;
-    $this->productResourceService = $productResourceService;
-    $this->productCategoryService = $productCategoryService;
-  }
-
-
-
+     */
+    public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService)
+    {
+      $this->commonHelper = $commonHelper;
+      $this->productResourceService = $productResourceService;
+      $this->productCategoryService = $productCategoryService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -40,6 +40,22 @@
     public function index()
     {
       //
+    }
+
+    public function indexByCategory(string $categorySlug)
+    {
+      $categoryModel = Category::query()->where('slug', $categorySlug)->firstOrFail();
+      $productsModel = $categoryModel->products->select(['id', 'name', 'slug', 'price', 'condition', 'store']);
+      $productsResource = ProductResource::collection($productsModel);
+
+      // Membuat objek WebResponsePayload dengan pesan dan data yang diinginkan
+      $webResponse = new WebResponsePayload(
+        'Products successfully fetched.',
+        jsonResource: $productsResource
+      );
+
+      // Mengembalikan respons JSON langsung dengan menggunakan json() method
+      return response()->json($webResponse->getJsonResource())->setStatusCode(200);
     }
 
     /**
