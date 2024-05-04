@@ -14,6 +14,8 @@
         $table->id();
         $table->unsignedBigInteger('product_id')->nullable(false);
         $table->unsignedBigInteger('category_id')->nullable(false);
+        $table->foreign('product_id')->references('id')->on('products');
+        $table->foreign('category_id')->references('id')->on('categories');
         $table->unique(['product_id', 'category_id']);
       });
     }
