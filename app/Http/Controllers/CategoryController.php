@@ -46,8 +46,8 @@
     public function store(CategoryCreateRequest $categoryCreateRequest): JsonResponse
     {
       $validatedCategorySaveRequest = $categoryCreateRequest->validated();
-      $categoryModel = new Category($validatedCategorySaveRequest);
       $validatedCategorySaveRequest['slug'] = $this->commonHelper->slugifyString($validatedCategorySaveRequest['name']);
+      $categoryModel = new Category($validatedCategorySaveRequest);
       $saveState = $categoryModel->save($validatedCategorySaveRequest);
       $this->commonHelper->validateOperationState($saveState);
       return response()

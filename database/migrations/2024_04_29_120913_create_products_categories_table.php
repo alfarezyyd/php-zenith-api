@@ -15,7 +15,6 @@
         $table->unsignedBigInteger('product_id')->nullable(false);
         $table->unsignedBigInteger('category_id')->nullable(false);
         $table->unique(['product_id', 'category_id']);
-        $table->timestamps();
       });
     }
 

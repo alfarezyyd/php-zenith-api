@@ -37,8 +37,8 @@
         'weight' => 'required|numeric|min:1',
         'width' => 'required|numeric|min:1',
         'height' => 'required|numeric|min:1',
-        'category_ids' => 'required|array',
-        'category_ids.*' => 'required|exists:categories,id',
+        'category_ids' => 'required|array|min:1',
+        'category_ids.*' => 'integer|min:1|exists:categories,id',
         'images' => 'array',
         'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
       ];
