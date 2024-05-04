@@ -6,6 +6,7 @@
   use App\Http\Requests\ProductSaveRequest;
   use App\Models\Product;
   use App\Payloads\WebResponsePayload;
+  use App\Services\ProductResourceService;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Auth;
@@ -14,13 +15,16 @@
   class ProductController extends Controller
   {
     private CommonHelper $commonHelper;
+    private ProductResourceService $productResourceService;
 
     /**
      * @param CommonHelper $commonHelper
+     * @param ProductResourceService $productResourceService
      */
-    public function __construct(CommonHelper $commonHelper)
+    public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService)
     {
       $this->commonHelper = $commonHelper;
+      $this->productResourceService = $productResourceService;
     }
 
 
@@ -53,6 +57,9 @@
       try {
         DB::beginTransaction();
         $productModel->save();
+        if ($productSaveRequest->hasFile('images')) {
+          $this->productResourceService->store($productSaveRequest->file('images'), $productModel->id);
+        }
         DB::commit();
         return response()
           ->json((new WebResponsePayload("Product created successfully"))
@@ -61,7 +68,7 @@
         DB::rollBack();
         print($throwable->getMessage());
         throw new HttpResponseException(response()->json(
-          (new WebResponsePayload("Internal server error", ))
+          (new WebResponsePayload("Internal server error",))
             ->getJsonResource())->setStatusCode(500)
         );
       }

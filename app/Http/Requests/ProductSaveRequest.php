@@ -37,7 +37,8 @@
         'weight' => 'required|numeric|min:1',
         'width' => 'required|numeric|min:1',
         'height' => 'required|numeric|min:1',
-        'images' => 'array|image|size:5120'
+        'images' => 'array',
+        'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
       ];
     }
   }
