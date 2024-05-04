@@ -45,15 +45,16 @@
      * Store a newly created resource in storage.
      * @throws HttpResponseException
      */
-    public function store(StoreSaveRequest $storeSaveRequest): JsonResponse
+    public function store(StoreSaveRequest $storeSaveRequest, int $storeId): JsonResponse
     {
       $validatedStoreSaveRequest = $storeSaveRequest->validated();
       $validatedStoreSaveRequest['user_id'] = Auth::id();
-      $uploadedFile = $storeSaveRequest->file("photo");
+      $uploadedFile = $storeSaveRequest->file("image");
       try {
         DB::beginTransaction();
         $uploadedFile->storePubliclyAs("stores", $uploadedFile->getClientOriginalName(), "public");
         $validatedStoreSaveRequest['image_path'] = "stores/" . $uploadedFile->getClientOriginalName();
+        $validatedStoreSaveRequest['store_id'] = $storeId;
         $storeModel = new Store($validatedStoreSaveRequest);
         $saveState = $storeModel->save();
         $this->commonHelper->validateOperationState($saveState);
