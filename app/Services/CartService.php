@@ -25,10 +25,9 @@
     /**
      * @throws HttpResponseException
      */
-    public function store(): string
+    public function store(int $userId): string
     {
-      $loggedUserId = Auth::id();
-      $newCart = new Cart(['user_id' => $loggedUserId]);
+      $newCart = new Cart(['user_id' => $userId]);
       $saveState = $newCart->save();
       $this->commonHelper->validateOperationState($saveState);
       return 'Cart created successfully';
