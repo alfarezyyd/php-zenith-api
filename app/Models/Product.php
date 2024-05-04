@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Models;
+  namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Factories\HasFactory;
+  use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+  use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Product extends Model
-{
+  class Product extends Model
+  {
     use HasFactory;
+
     protected $fillable = [
       'slug',
       'name',
@@ -23,4 +26,14 @@ class Product extends Model
       'height',
       'store_id'
     ];
-}
+
+    public function categories(): BelongsToMany
+    {
+      return $this->belongsToMany(Category::class, "product_categories", "product_id", "category_id");
+    }
+
+    public function resources(): HasMany
+    {
+      return $this->hasMany(ProductResource::class, 'product_id', 'id');
+    }
+  }
