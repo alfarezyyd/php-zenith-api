@@ -57,8 +57,9 @@
 
     Route::prefix('products')->group(function () {
       Route::get('', [ProductController::class, 'index']);
-      Route::get('{categorySlug}', [ProductController::class, 'indexByCategory']);
-      Route::post('{storeId}', [ProductController::class, 'store']);
+      Route::get('/{categorySlug}', [ProductController::class, 'indexByCategory']);
+      Route::get('/{storeSlug}/{categorySlug}', [ProductController::class, 'show']);
+      Route::post('/{storeId}', [ProductController::class, 'store']);
       Route::put('/{productId}', [ProductController::class, 'update']);
       Route::delete('/{productId}', [ProductController::class, 'destroy']);
     });
