@@ -16,6 +16,7 @@
     public $incrementing = true;
     public $timestamps = true;
     protected $fillable = [
+      'slug',
       'name',
       'domain',
       'slogan',
