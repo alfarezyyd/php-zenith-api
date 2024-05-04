@@ -8,7 +8,7 @@
   use App\Models\Category;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Http\JsonResponse;
-  use Illuminate\Http\Request;
+  use Illuminate\Support\Str;
 
   class CategoryController extends Controller
   {
@@ -46,7 +46,7 @@
     public function store(CategoryCreateRequest $categoryCreateRequest): JsonResponse
     {
       $validatedCategorySaveRequest = $categoryCreateRequest->validated();
-      $validatedCategorySaveRequest['slug'] = $this->commonHelper->slugifyString($validatedCategorySaveRequest['name']);
+      $validatedCategorySaveRequest['slug'] = Str::slug($validatedCategorySaveRequest['name']);
       $categoryModel = new Category($validatedCategorySaveRequest);
       $saveState = $categoryModel->save($validatedCategorySaveRequest);
       $this->commonHelper->validateOperationState($saveState);

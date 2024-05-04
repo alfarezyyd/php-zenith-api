@@ -54,6 +54,7 @@
         DB::beginTransaction();
         $uploadedFile->storePubliclyAs("stores", $uploadedFile->getClientOriginalName(), "public");
         $validatedStoreSaveRequest['image_path'] = "stores/" . Str::uuid() . "_{$uploadedFile->getClientOriginalName()}";
+        $validatedStoreSaveRequest['slug'] = Str::slug($validatedStoreSaveRequest['name']);
         $storeModel = new Store($validatedStoreSaveRequest);
         $saveState = $storeModel->save();
         $this->commonHelper->validateOperationState($saveState);

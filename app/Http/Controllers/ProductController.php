@@ -7,6 +7,7 @@
   use App\Http\Resources\ProductResource;
   use App\Models\Category;
   use App\Models\Product;
+  use App\Models\Store;
   use App\Payloads\WebResponsePayload;
   use App\Services\ProductCategoryService;
   use App\Services\ProductResourceService;
@@ -14,6 +15,7 @@
   use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
+  use Illuminate\Support\Str;
   use Throwable;
 
   class ProductController extends Controller
@@ -74,7 +76,7 @@
     {
       $validatedProductSaveRequest = $productSaveRequest->validated();
       $validatedProductSaveRequest['store_id'] = $storeId;
-      $validatedProductSaveRequest['slug'] = $this->commonHelper->slugifyString($validatedProductSaveRequest['name']);
+      $validatedProductSaveRequest['slug'] = Str::slug($validatedProductSaveRequest['name']);
       $productModel = new Product($validatedProductSaveRequest);
       try {
         DB::beginTransaction();
@@ -100,9 +102,13 @@
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $storeSlug, string $productSlug)
     {
-      //
+      $storeModel = Store::query()->where('slug', $storeSlug)->firstOrFail();
+      $productModel = $storeModel->products->where('slug', $productSlug)->firstOrFail();
+      return response()
+        ->json((new WebResponsePayload("Product retrieved successfully", jsonResource: new ProductResource($productModel)))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**
