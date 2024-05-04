@@ -1,14 +1,20 @@
 <?php
 
-namespace App\Models;
+  namespace App\Models;
 
-use App\Enums\ExpeditionCityType;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+  use App\Enums\ExpeditionCityType;
+  use Illuminate\Database\Eloquent\Factories\HasFactory;
+  use Illuminate\Database\Eloquent\Model;
 
-class ExpeditionCity extends Model
-{
+  class ExpeditionCity extends Model
+  {
     use HasFactory;
+
+    protected $table = 'expedition_cities';
+    protected $primaryKey = 'id';
+    protected $keyType = 'int';
+    public $incrementing = true;
+    public $timestamps = true;
     protected $casts = [
       'expedition_province_id' => ExpeditionCityType::class
     ];
@@ -20,4 +26,4 @@ class ExpeditionCity extends Model
       'postal_code',
       'expedition_province_id'
     ];
-}
+  }

@@ -9,6 +9,11 @@
   {
     use HasFactory;
 
+    protected $table = 'addresses';
+    protected $primaryKey = 'id';
+    protected $keyType = 'int';
+    public $incrementing = true;
+    public $timestamps = true;
     protected $fillable = [
       'label',
       'street',

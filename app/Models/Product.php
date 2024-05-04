@@ -11,6 +11,11 @@
   {
     use HasFactory;
 
+    protected $table = 'products';
+    protected $primaryKey = 'id';
+    protected $keyType = 'int';
+    public $incrementing = true;
+    public $timestamps = true;
     protected $fillable = [
       'slug',
       'name',
