@@ -47,6 +47,7 @@
     {
       $validatedCategorySaveRequest = $categoryCreateRequest->validated();
       $categoryModel = new Category($validatedCategorySaveRequest);
+      $validatedCategorySaveRequest['slug'] = $this->commonHelper->slugifyString($validatedCategorySaveRequest['name']);
       $saveState = $categoryModel->save($validatedCategorySaveRequest);
       $this->commonHelper->validateOperationState($saveState);
       return response()

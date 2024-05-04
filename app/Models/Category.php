@@ -18,6 +18,7 @@
     public $incrementing = true;
     public $timestamps = true;
     protected $fillable = [
+      'slug',
       'name',
       'category_id'
     ];

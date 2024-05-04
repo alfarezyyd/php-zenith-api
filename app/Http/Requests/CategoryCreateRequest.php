@@ -23,7 +23,7 @@
     public function rules(): array
     {
       return [
-        'name' => 'required|string|unique:categories,name|max:255',
+        'name' => 'required|string|unique:categories,name|max:100',
         'category_id' => 'integer|gt:0'
       ];
     }

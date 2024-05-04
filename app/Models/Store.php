@@ -23,7 +23,7 @@
       'zip_code',
       'detail',
       'description',
-      'photo_path',
+      'image_path',
       'user_id'
     ];
   }

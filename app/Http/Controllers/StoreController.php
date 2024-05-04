@@ -8,10 +8,10 @@
   use App\Payloads\WebResponsePayload;
   use HttpResponseException;
   use Illuminate\Http\JsonResponse;
-  use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Storage;
+  use Illuminate\Support\Str;
 
   class StoreController extends Controller
   {
@@ -45,16 +45,15 @@
      * Store a newly created resource in storage.
      * @throws HttpResponseException
      */
-    public function store(StoreSaveRequest $storeSaveRequest, int $storeId): JsonResponse
+    public function store(StoreSaveRequest $storeSaveRequest): JsonResponse
     {
       $validatedStoreSaveRequest = $storeSaveRequest->validated();
       $validatedStoreSaveRequest['user_id'] = Auth::id();
-      $uploadedFile = $storeSaveRequest->file("image");
+      $uploadedFile = $validatedStoreSaveRequest['image_path'];
       try {
         DB::beginTransaction();
         $uploadedFile->storePubliclyAs("stores", $uploadedFile->getClientOriginalName(), "public");
-        $validatedStoreSaveRequest['image_path'] = "stores/" . $uploadedFile->getClientOriginalName();
-        $validatedStoreSaveRequest['store_id'] = $storeId;
+        $validatedStoreSaveRequest['image_path'] = "stores/" . Str::uuid() . "_{$uploadedFile->getClientOriginalName()}";
         $storeModel = new Store($validatedStoreSaveRequest);
         $saveState = $storeModel->save();
         $this->commonHelper->validateOperationState($saveState);

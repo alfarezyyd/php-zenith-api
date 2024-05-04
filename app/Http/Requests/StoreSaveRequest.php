@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+  namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
+  use Illuminate\Contracts\Validation\ValidationRule;
+  use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSaveRequest extends FormRequest
-{
+  class StoreSaveRequest extends FormRequest
+  {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+      return true;
     }
 
     /**
@@ -22,15 +22,16 @@ class StoreSaveRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-          'name' => 'required|string|max:60',
-          'domain' => 'required|string|max:24',
-          'slogan' => 'required|string|max:48',
-          'location_name' => 'required|string|max:25',
-          'city' => 'required|string|max:50',
-          'zip_code' => 'required|string|max:10',
-          'detail' => 'required|string|max:255',
-          'description' => 'required|string|max:140',
-        ];
+      return [
+        'name' => 'required|string|max:60',
+        'domain' => 'required|string|max:24',
+        'slogan' => 'required|string|max:48',
+        'location_name' => 'required|string|max:25',
+        'city' => 'required|string|max:50',
+        'zip_code' => 'required|string|max:10',
+        'detail' => 'required|string|max:255',
+        'description' => 'required|string|max:140',
+        'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+      ];
     }
-}
+  }
