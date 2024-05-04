@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id')->nullable(false);
             $table->unsignedBigInteger('cart_id')->nullable(false);
-            $table->unsignedInteger('price')->nullable(false);
+            $table->unsignedInteger('sub_total_price')->nullable(false);
             $table->unsignedInteger('quantity')->nullable(false);
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('cart_id')->references('id')->on('carts');
