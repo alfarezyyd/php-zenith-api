@@ -7,11 +7,11 @@
 
   class ProductCategoryService
   {
-    public function store(int $productId, int $categoryId): void
+    public function store(array $categoryIds, Product $productModel): void
     {
-      $productModel = Product::query()->findOrFail($productId);
-      $categoryModel = Category::query()->findOrFail($categoryId);
-      $productModel->categories()->attach($categoryModel);
+      foreach ($categoryIds as $categoryId) {
+        $productModel->categories()->attach($categoryId);
+      }
     }
 
     public function destroy(int $productId, int $categoryId): void

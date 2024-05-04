@@ -6,26 +6,32 @@
   use App\Http\Requests\ProductSaveRequest;
   use App\Models\Product;
   use App\Payloads\WebResponsePayload;
+  use App\Services\ProductCategoryService;
   use App\Services\ProductResourceService;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
+  use Throwable;
 
   class ProductController extends Controller
   {
     private CommonHelper $commonHelper;
     private ProductResourceService $productResourceService;
+    private ProductCategoryService $productCategoryService;
 
     /**
      * @param CommonHelper $commonHelper
      * @param ProductResourceService $productResourceService
-     */
-    public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService)
-    {
-      $this->commonHelper = $commonHelper;
-      $this->productResourceService = $productResourceService;
-    }
+     * @param ProductCategoryService $productCategoryService
+     */public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService)
+  {
+    $this->commonHelper = $commonHelper;
+    $this->productResourceService = $productResourceService;
+    $this->productCategoryService = $productCategoryService;
+  }
+
+
 
 
     /**
@@ -60,11 +66,12 @@
         if ($productSaveRequest->hasFile('images')) {
           $this->productResourceService->store($productSaveRequest->file('images'), $productModel->id);
         }
+        $this->productCategoryService->store($validatedProductSaveRequest['category_ids'], $productModel);
         DB::commit();
         return response()
           ->json((new WebResponsePayload("Product created successfully"))
             ->getJsonResource())->setStatusCode(201);
-      } catch (\Throwable $throwable) {
+      } catch (Throwable $throwable) {
         DB::rollBack();
         print($throwable->getMessage());
         throw new HttpResponseException(response()->json(
@@ -93,6 +100,7 @@
     /**
      * Update the specified resource in storage.
      * @throws HttpResponseException
+     * @throws \HttpResponseException
      */
     public function update(ProductSaveRequest $productSaveRequest, int $storeId): JsonResponse
     {
@@ -111,7 +119,7 @@
      */
     public function destroy(int $storeId): JsonResponse
     {
-      $productModel = Product::query()->findOrFail($storeId)->where('user_id', Auth::id())->delete();
+      Product::query()->findOrFail($storeId)->where('user_id', Auth::id())->delete();
       return response()
         ->json((new WebResponsePayload("Category deleted successfully"))
           ->getJsonResource());
