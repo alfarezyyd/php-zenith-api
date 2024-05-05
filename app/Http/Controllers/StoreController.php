@@ -4,6 +4,7 @@
 
   use App\Helpers\CommonHelper;
   use App\Http\Requests\StoreSaveRequest;
+  use App\Http\Resources\StoreResource;
   use App\Models\Store;
   use App\Payloads\WebResponsePayload;
   use HttpResponseException;
@@ -72,9 +73,12 @@
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $storeSlug): JsonResponse
     {
-      //
+      $storeModel = Store::query()->where('slug', $storeSlug)->firstOrFail();
+      return response()
+        ->json((new WebResponsePayload("Store retrieved successfully", jsonResource: new StoreResource($storeModel)))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**
