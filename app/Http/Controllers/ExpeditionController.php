@@ -4,6 +4,7 @@
 
   use App\Helpers\CommonHelper;
   use App\Http\Requests\ExpeditionSaveRequest;
+  use App\Http\Resources\ExpeditionResource;
   use App\Models\Expedition;
   use App\Models\ExpeditionCity;
   use App\Models\ExpeditionProvince;
@@ -37,7 +38,10 @@
      */
     public function index()
     {
-      //
+      $expeditionsModel = Expedition::query()->select();
+      return response()
+        ->json((new WebResponsePayload("Expedition retrieve successfully", jsonResource: ExpeditionResource::collection($expeditionsModel)))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**
