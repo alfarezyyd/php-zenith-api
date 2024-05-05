@@ -4,6 +4,7 @@
 
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
   class Wishlist extends Model
   {
@@ -21,4 +22,9 @@
       'description',
       'type'
     ];
+
+    public function products(): BelongsToMany
+    {
+      return $this->belongsToMany(Product::class, 'wishlist_products', 'wishlist_id', 'product_id');
+    }
   }

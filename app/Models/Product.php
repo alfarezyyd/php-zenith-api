@@ -48,4 +48,11 @@
     {
       return $this->belongsTo(Store::class, 'store_id', 'id');
     }
+
+    public function wishlists(): BelongsToMany
+    {
+      return $this->belongsToMany(Wishlist::class, 'wishlist_products', 'product_id', 'wishlist_id');
+    }
+
+
   }

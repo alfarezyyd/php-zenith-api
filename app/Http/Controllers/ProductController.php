@@ -102,7 +102,7 @@
     /**
      * Display the specified resource.
      */
-    public function show(string $storeSlug, string $productSlug)
+    public function show(string $storeSlug, string $productSlug): JsonResponse
     {
       $storeModel = Store::query()->where('slug', $storeSlug)->firstOrFail();
       $productModel = $storeModel->products->where('slug', $productSlug)->firstOrFail();

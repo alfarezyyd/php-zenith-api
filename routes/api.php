@@ -6,6 +6,7 @@
   use App\Http\Controllers\ExpeditionController;
   use App\Http\Controllers\ProductController;
   use App\Http\Controllers\StoreController;
+  use App\Http\Controllers\WishlistController;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,17 @@
       Route::post('/{storeId}', [ProductController::class, 'store']);
       Route::put('/{productId}', [ProductController::class, 'update']);
       Route::delete('/{productId}', [ProductController::class, 'destroy']);
+    });
+
+    Route::prefix('wishlists')->group(function () {
+      Route::get('', [WishlistController::class, 'index']);
+      Route::get('/', [WishlistController::class, 'indexByCategory']);
+      Route::get('/{wishlistSlug}', [WishlistController::class, 'show']);
+      Route::post('/', [WishlistController::class, 'store']);
+      Route::put('/{wishlistId}', [WishlistController::class, 'update']);
+      Route::delete('/{wishlistId}', [WishlistController::class, 'destroy']);
+      Route::get('/{wishtlistId}/{productId}', [WishlistController::class, 'attachProductIntoWishlist']);
+      Route::get('detach/{wishtlistId}/{productId}', [WishlistController::class, 'detachProductFromWishlist']);
     });
   });
 

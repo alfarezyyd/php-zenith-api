@@ -4,6 +4,7 @@
 
   use App\Helpers\CommonHelper;
   use App\Http\Requests\WishlistSaveRequest;
+  use App\Models\Product;
   use App\Models\Wishlist;
   use App\Payloads\WebResponsePayload;
   use HttpResponseException;
@@ -100,6 +101,26 @@
       $this->commonHelper->validateOperationState($deleteState);
       return response()
         ->json((new WebResponsePayload("Wishlist deleted successfully"))
+          ->getJsonResource())->setStatusCode(200);
+    }
+
+    public function attachProductIntoWishlist(int $wishlistId, int $productId): JsonResponse
+    {
+      $wishlistModel = Wishlist::query()->find($wishlistId)->where('user_id', Auth::id())->firstOrFail();
+      $productModel = Product::query()->find($productId)->firstOrFail();
+      $wishlistModel->products()->attach($productModel);
+      return response()
+        ->json((new WebResponsePayload("Attach deleted successfully"))
+          ->getJsonResource())->setStatusCode(200);
+    }
+
+    public function detachProductFromWishlist(int $wishlistId, int $productId): JsonResponse
+    {
+      $wishlistModel = Wishlist::query()->find($wishlistId)->where('user_id', Auth::id())->firstOrFail();
+      $productModel = Product::query()->find($productId)->firstOrFail();
+      $wishlistModel->products()->detach($productModel);
+      return response()
+        ->json((new WebResponsePayload("Attach deleted successfully"))
           ->getJsonResource())->setStatusCode(200);
     }
   }
