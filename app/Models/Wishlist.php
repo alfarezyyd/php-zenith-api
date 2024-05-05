@@ -25,6 +25,6 @@
 
     public function products(): BelongsToMany
     {
-      return $this->belongsToMany(Product::class, 'wishlist_products', 'wishlist_id', 'product_id');
+      return $this->belongsToMany(Product::class, 'product_wishlists', 'wishlist_id', 'product_id');
     }
   }

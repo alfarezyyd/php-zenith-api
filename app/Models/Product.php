@@ -51,8 +51,6 @@
 
     public function wishlists(): BelongsToMany
     {
-      return $this->belongsToMany(Wishlist::class, 'wishlist_products', 'product_id', 'wishlist_id');
+      return $this->belongsToMany(Wishlist::class, 'product_wishlists', 'product_id', 'wishlist_id');
     }
-
-
   }
