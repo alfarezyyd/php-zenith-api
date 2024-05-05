@@ -32,10 +32,10 @@
      */
     public function index(): JsonResponse
     {
-      $addressCollection = Address::query()->select()->where('user_id', Auth::id())->get();
+      $addressCollection = Address::query()->select()->where('user_id', Auth::id())->select(['label', 'street', 'neighbourhood_number', 'hamlet_number']);
       return response()
         ->json((new WebResponsePayload("Address retrieve successfully", jsonResource: new AddressResource($addressCollection)))
-          ->getJsonResource())->setStatusCode(201);
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**
@@ -43,7 +43,6 @@
      */
     public function create()
     {
-
 
     }
 
@@ -66,9 +65,12 @@
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $addressId): JsonResponse
     {
-      //
+      $addressModel = Address::query()->findOrFail($addressId)->where('user_id', Auth::id());
+      return response()
+        ->json((new WebResponsePayload("Address retrieve successfully", jsonResource: new AddressResource($addressModel)))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**
