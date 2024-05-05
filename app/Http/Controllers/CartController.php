@@ -1,17 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+  namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+  use App\Models\Cart;
+  use App\Models\Product;
+  use App\Payloads\WebResponsePayload;
+  use Illuminate\Http\Request;
+  use Illuminate\Support\Facades\Auth;
 
-class CartController extends Controller
-{
+  class CartController extends Controller
+  {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+      //
     }
 
     /**
@@ -19,7 +23,7 @@ class CartController extends Controller
      */
     public function create()
     {
-        //
+      //
     }
 
     /**
@@ -35,7 +39,7 @@ class CartController extends Controller
      */
     public function show(string $id)
     {
-        //
+      //
     }
 
     /**
@@ -43,7 +47,7 @@ class CartController extends Controller
      */
     public function edit(string $id)
     {
-        //
+      //
     }
 
     /**
@@ -51,7 +55,7 @@ class CartController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+      //
     }
 
     /**
@@ -59,6 +63,26 @@ class CartController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+      //
     }
-}
+
+    public function attachProductIntoCart(int $cartId, int $productId)
+    {
+      $productModel = Product::query()->findOrFail($productId);
+      $cartModel = Cart::query()->findOrFail($cartId)->where('user_id', Auth::id());
+      $cartModel->products()->attach($productModel);
+      return response()
+        ->json((new WebResponsePayload("Product attached successfully"))
+          ->getJsonResource())->setStatusCode(200);
+    }
+
+    public function detachProductFromCart(int $cartId, int $productId)
+    {
+      $productModel = Product::query()->findOrFail($productId);
+      $cartModel = Cart::query()->findOrFail($cartId)->where('user_id', Auth::id());
+      $cartModel->products()->detach($productModel);
+      return response()
+        ->json((new WebResponsePayload("Product detached successfully"))
+          ->getJsonResource())->setStatusCode(200);
+    }
+  }
