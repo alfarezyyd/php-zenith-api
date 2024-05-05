@@ -5,6 +5,7 @@
   use App\Helpers\CommonHelper;
   use App\Http\Requests\CategoryCreateRequest;
   use App\Http\Requests\CategoryUpdateRequest;
+  use App\Http\Resources\CategoryResource;
   use App\Models\Category;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Http\JsonResponse;
@@ -28,7 +29,10 @@
      */
     public function index()
     {
-      //
+      $categoriesModel = Category::query()->select();
+      return response()
+        ->json((new WebResponsePayload("Category created successfully", jsonResource: CategoryResource::collection($categoriesModel)))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**

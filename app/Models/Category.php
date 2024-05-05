@@ -17,6 +17,7 @@
     protected $keyType = 'int';
     public $incrementing = true;
     public $timestamps = true;
+    protected $with = ['parentCategory'];
     protected $fillable = [
       'slug',
       'name',
