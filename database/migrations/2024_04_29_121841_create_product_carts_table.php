@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity')->nullable(false);
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('cart_id')->references('id')->on('carts');
+            $table->unique(['product_id', 'cart_id']);
             $table->timestamps();
         });
     }

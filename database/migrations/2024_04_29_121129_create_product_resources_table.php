@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('image_path', length: 255)->nullable();
             $table->string('video_url', length: 512)->nullable();
             $table->unsignedBigInteger('product_id')->nullable(false);
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();
         });
     }
