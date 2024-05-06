@@ -5,6 +5,7 @@
   use App\Models\Cart;
   use App\Models\Product;
   use App\Payloads\WebResponsePayload;
+  use Illuminate\Http\JsonResponse;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
 
@@ -66,7 +67,7 @@
       //
     }
 
-    public function attachProductIntoCart(int $cartId, int $productId)
+    public function attachProductIntoCart(int $cartId, int $productId): JsonResponse
     {
       $productModel = Product::query()->findOrFail($productId);
       $cartModel = Cart::query()->findOrFail($cartId)->where('user_id', Auth::id());
@@ -76,7 +77,7 @@
           ->getJsonResource())->setStatusCode(200);
     }
 
-    public function detachProductFromCart(int $cartId, int $productId)
+    public function detachProductFromCart(int $cartId, int $productId): JsonResponse
     {
       $productModel = Product::query()->findOrFail($productId);
       $cartModel = Cart::query()->findOrFail($cartId)->where('user_id', Auth::id());
