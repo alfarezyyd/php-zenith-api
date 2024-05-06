@@ -9,6 +9,7 @@
   use App\Models\Product;
   use App\Models\Store;
   use App\Payloads\WebResponsePayload;
+  use App\Repository\Contract\SearchRepository;
   use App\Services\ProductCategoryService;
   use App\Services\ProductResourceService;
   use Illuminate\Http\Exceptions\HttpResponseException;
@@ -23,25 +24,36 @@
     private CommonHelper $commonHelper;
     private ProductResourceService $productResourceService;
     private ProductCategoryService $productCategoryService;
+    private SearchRepository $searchRepository;
 
     /**
      * @param CommonHelper $commonHelper
      * @param ProductResourceService $productResourceService
      * @param ProductCategoryService $productCategoryService
+     * @param SearchRepository $searchRepository
      */
-    public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService)
+    public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService, SearchRepository $searchRepository)
     {
       $this->commonHelper = $commonHelper;
       $this->productResourceService = $productResourceService;
       $this->productCategoryService = $productCategoryService;
+      $this->searchRepository = $searchRepository;
     }
+
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-      //
+      if (request()->has('q')) {
+        $productModel = $this->searchRepository->search(request('q'));
+      } else {
+        $productModel = Product::query()->with(['category', 'store']);
+      }
+      return response()
+        ->json((new WebResponsePayload("Product retrieve successfully", jsonResource: new ProductResource($productModel)))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     public function indexByCategory(string $categorySlug)
