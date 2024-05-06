@@ -49,14 +49,14 @@
       if (request()->has('q')) {
         $productModel = $this->searchRepository->search(request('q'));
       } else {
-        $productModel = Product::query()->with(['category', 'store']);
+        $productModel = Product::query()->with(['categories', 'store'])->get();
       }
       return response()
-        ->json((new WebResponsePayload("Product retrieve successfully", jsonResource: new ProductResource($productModel)))
+        ->json((new WebResponsePayload("Product retrieve successfully", jsonResource: ProductResource::collection($productModel)))
           ->getJsonResource())->setStatusCode(200);
     }
 
-    public function indexByCategory(string $categorySlug)
+    public function indexByCategory(string $categorySlug): JsonResponse
     {
       $categoryModel = Category::query()->where('slug', $categorySlug)->firstOrFail();
       $productsModel = $categoryModel->products->select(['id', 'name', 'slug', 'price', 'condition', 'store']);
