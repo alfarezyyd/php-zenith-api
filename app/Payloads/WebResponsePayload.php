@@ -28,10 +28,8 @@
     public function getJsonResource(): array
     {
       return [
-        'data' => [
-          'value' => $this->jsonResource,
-          'message' => $this->responseMessage,
-        ],
+        'data' => $this->jsonResource,
+        'message' => $this->responseMessage,
         'errors' => $this->errorInformation,
         'paging' => $this->dataPaging,
       ];
