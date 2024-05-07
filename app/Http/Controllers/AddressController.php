@@ -32,9 +32,9 @@
      */
     public function index(): JsonResponse
     {
-      $addressCollection = Address::query()->select()->where('user_id', Auth::id())->select(['label', 'street', 'neighbourhood_number', 'hamlet_number']);
+      $addressCollection = Address::query()->select()->where('user_id', Auth::id())->select(['id', 'label', 'street', 'neighbourhood_number', 'hamlet_number'])->get();
       return response()
-        ->json((new WebResponsePayload("Address retrieve successfully", jsonResource: new AddressResource($addressCollection)))
+        ->json((new WebResponsePayload("Address retrieve successfully", jsonResource: AddressResource::collection($addressCollection)))
           ->getJsonResource())->setStatusCode(200);
     }
 
