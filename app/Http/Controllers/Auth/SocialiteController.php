@@ -6,20 +6,20 @@
   use App\Models\SocialAccount;
   use App\Models\User;
   use Exception;
-  use Illuminate\Http\Request;
+  use Illuminate\Http\JsonResponse;
   use Laravel\Socialite\Facades\Socialite;
+  use Symfony\Component\HttpFoundation\RedirectResponse;
 
   class SocialiteController extends Controller
   {
-    public function redirectToProvider($provider)
+    public function redirectToProvider($provider): RedirectResponse|\Illuminate\Http\RedirectResponse
     {
       return Socialite::driver($provider)->redirect();
     }
 
-    public function handleProvideCallback($provider)
+    public function handleProvideCallback($provider): JsonResponse|\Illuminate\Http\RedirectResponse
     {
       try {
-
         $user = Socialite::driver($provider)->stateless()->user();
       } catch (Exception $e) {
         return redirect()->back();
@@ -27,11 +27,8 @@
       // find or create user and send params user get from socialite and provider
       $authUser = $this->findOrCreateUser($user, $provider);
 
-      // login user
-      Auth()->login($authUser, true);
-
-      // setelah login redirect ke dashboard
-      return redirect()->route('dashboard');
+      $token = $authUser->createToken('token_name')->plainTextToken;
+      return response()->json(['token' => $token]);
     }
 
     public function findOrCreateUser($socialUser, $provider)
