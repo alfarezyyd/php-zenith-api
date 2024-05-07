@@ -1,7 +1,6 @@
 <?php
 
   use App\Http\Controllers\AddressController;
-  use App\Http\Controllers\Auth\SocialiteController;
   use App\Http\Controllers\CartController;
   use App\Http\Controllers\CategoryController;
   use App\Http\Controllers\ExpeditionController;
@@ -18,7 +17,6 @@
 
   Route::middleware([
     'auth:sanctum',
-    config('jetstream.auth_session'),
     'verified',
   ])->group(function () {
     Route::prefix('expeditions')->group(function () {
@@ -80,8 +78,3 @@
   });
 
 
-  /**
-   * socialite auth
-   */
-  Route::get('/auth/{provider}', [SocialiteController::class, 'redirectToProvider']);
-  Route::get('/auth/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
