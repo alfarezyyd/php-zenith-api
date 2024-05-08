@@ -67,7 +67,7 @@
      */
     public function show(int $addressId): JsonResponse
     {
-      $addressModel = Address::query()->findOrFail($addressId)->where('user_id', Auth::id());
+      $addressModel = Address::query()->findOrFail($addressId)->where('user_id', Auth::id())->get();
       return response()
         ->json((new WebResponsePayload("Address retrieve successfully", jsonResource: new AddressResource($addressModel)))
           ->getJsonResource())->setStatusCode(200);
@@ -84,11 +84,11 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(AddressSaveRequest $addressCreateRequest, int $addressesId): JsonResponse
+    public function update(AddressSaveRequest $addressCreateRequest, int $addressId): JsonResponse
     {
       $validatedAddressCreateRequest = $addressCreateRequest->validated();
       $validatedAddressCreateRequest['user_id'] = Auth::id();
-      Address::query()->findOrFail($addressesId)->fill($validatedAddressCreateRequest)->save();
+      Address::query()->findOrFail($addressId)->fill($validatedAddressCreateRequest)->save();
       return response()
         ->json((new WebResponsePayload("Address updated successfully"))
           ->getJsonResource())->setStatusCode(200);
@@ -97,9 +97,9 @@
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $addressesId): JsonResponse
+    public function destroy(int $addressId): JsonResponse
     {
-      Address::query()->findOrFail($addressesId)->where('user_id', Auth::id())->delete();
+      Address::query()->findOrFail($addressId)->where('user_id', Auth::id())->delete();
       return response()
         ->json((new WebResponsePayload("Address deleted successfully"))
           ->getJsonResource())->setStatusCode(200);
