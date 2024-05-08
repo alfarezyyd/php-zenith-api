@@ -46,6 +46,7 @@
     Route::prefix('stores')->group(function () {
       Route::get('', [StoreController::class, 'index']);
       Route::post('', [StoreController::class, 'store']);
+      Route::get('/{storeSlug}', [StoreController::class, 'show']);
       Route::put('/{storeId}', [StoreController::class, 'update']);
       Route::delete('/{storeId}', [StoreController::class, 'destroy']);
     });

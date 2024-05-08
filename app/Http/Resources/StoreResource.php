@@ -17,7 +17,7 @@
       return [
         'name' => $this['name'],
         'domain' => $this['domain'],
-        'slogan' => $this['slogam'],
+        'slogan' => $this['slogan'],
         'location_name' => $this['location_name'],
         'city' => $this['city'],
         'zip_code' => $this['zip_code'],
