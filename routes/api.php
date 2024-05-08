@@ -64,7 +64,7 @@
       Route::get('/{storeSlug}/{categorySlug}', [ProductController::class, 'show']);
       Route::post('/{storeId}', [ProductController::class, 'store']);
       Route::put('/{productId}', [ProductController::class, 'update']);
-      Route::delete('/{productId}', [ProductController::class, 'destroy']);
+      Route::delete('/{storeSlug}/{productId}', [ProductController::class, 'destroy']);
     });
 
     Route::prefix('wishlists')->group(function () {

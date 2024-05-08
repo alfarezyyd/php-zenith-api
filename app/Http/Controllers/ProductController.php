@@ -17,6 +17,7 @@
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Str;
+  use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
   use Throwable;
 
   class ProductController extends Controller
@@ -87,6 +88,10 @@
     public function store(ProductSaveRequest $productSaveRequest, int $storeId): JsonResponse
     {
       $validatedProductSaveRequest = $productSaveRequest->validated();
+      $isStoreExists = Store::query()->where('id', $storeId)->exists();
+      if (!$isStoreExists) {
+        throw new NotFoundHttpException("Store not found");
+      }
       $validatedProductSaveRequest['store_id'] = $storeId;
       $validatedProductSaveRequest['slug'] = Str::slug($validatedProductSaveRequest['name']);
       $productModel = new Product($validatedProductSaveRequest);
@@ -133,8 +138,7 @@
 
     /**
      * Update the specified resource in storage.
-     * @throws HttpResponseException
-     * @throws \HttpResponseException
+     * @throws HttpResponseException|\HttpResponseException
      */
     public function update(ProductSaveRequest $productSaveRequest, int $storeId): JsonResponse
     {
@@ -150,12 +154,14 @@
 
     /**
      * Remove the specified resource from storage.
+     * @throws \HttpResponseException
      */
-    public function destroy(int $storeId): JsonResponse
+    public function destroy(string $storeSlug, int $productId): JsonResponse
     {
-      Product::query()->findOrFail($storeId)->where('user_id', Auth::id())->delete();
+      $storeModel = Store::query()->with('products')->where('slug', $storeSlug)->where('user_id', Auth::id())->firstOrFail();
+       $storeModel->products->where('product_id', $productId)->firstOrFail()->delete();
       return response()
-        ->json((new WebResponsePayload("Category deleted successfully"))
+        ->json((new WebResponsePayload("Product deleted successfully"))
           ->getJsonResource());
     }
   }
