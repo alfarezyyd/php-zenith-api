@@ -1,8 +1,10 @@
 <?php
 
+  use App\Payloads\WebResponsePayload;
   use Illuminate\Foundation\Application;
   use Illuminate\Foundation\Configuration\Exceptions;
   use Illuminate\Foundation\Configuration\Middleware;
+  use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
   return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,9 +15,14 @@
     )
     ->withMiddleware(function (Middleware $middleware) {
       $middleware->validateCsrfTokens(
-        except: ['login']
+        except: ['api/*', 'login']
       );
     })
     ->withExceptions(function (Exceptions $exceptions) {
+      $exceptions->render(function (NotFoundHttpException $notFoundHttpException) {
+        return response()
+          ->json((new WebResponsePayload( "Entity not found", errorInformation: $notFoundHttpException->getMessage()))
+            ->getJsonResource())->setStatusCode(404);
+      });
       //
     })->create();
