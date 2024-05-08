@@ -37,9 +37,10 @@
 
     Route::prefix('addresses')->group(function () {
       Route::get('', [AddressController::class, 'index']);
+      Route::get('/{addressId}', [AddressController::class, 'show']);
       Route::post('', [AddressController::class, 'store']);
-      Route::put('/{categoryId}', [AddressController::class, 'update']);
-      Route::delete('/{categoryId}', [AddressController::class, 'destroy']);
+      Route::put('/{addressId}', [AddressController::class, 'update']);
+      Route::delete('/{addressId}', [AddressController::class, 'destroy']);
     });
 
     Route::prefix('stores')->group(function () {
