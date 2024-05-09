@@ -7,6 +7,7 @@
   use App\Models\SocialAccount;
   use App\Models\User;
   use App\Payloads\WebResponsePayload;
+  use App\Services\CartService;
   use Exception;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
@@ -16,6 +17,16 @@
 
   class SocialiteController extends Controller
   {
+    private CartService $cartService;
+
+    /**
+     * @param CartService $cartService
+     */
+    public function __construct(CartService $cartService)
+    {
+      $this->cartService = $cartService;
+    }
+
     public function redirectToProvider($provider): RedirectResponse|\Illuminate\Http\RedirectResponse
     {
       return Socialite::driver($provider)->redirect();
@@ -65,8 +76,7 @@
               'name' => $socialUser->getName(),
               'email' => $socialUser->getEmail()
             ]);
-            $cartModel = new Cart(['user_id' => $userModel['id']]);
-            $cartModel->save();
+            $this->cartService->store($userModel['id']);
           }
           // Buat Social Account baru
           $userModel->socialAccounts()->create([
