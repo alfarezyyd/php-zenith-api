@@ -7,6 +7,7 @@
   use App\Http\Requests\UserProfileUpdateRequest;
   use App\Models\UserProfile;
   use App\Payloads\WebResponsePayload;
+  use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
 
@@ -55,6 +56,9 @@
         )->setStatusCode(201);
       } catch (\Exception) {
         DB::rollback();
+        throw new HttpResponseException(response()->json(
+          new WebResponsePayload("User profile failed to create", 500),
+        ));
       }
     }
 
