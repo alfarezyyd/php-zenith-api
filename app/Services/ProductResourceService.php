@@ -3,7 +3,6 @@
   namespace App\Services;
 
   use App\Models\ProductResource;
-  use Illuminate\Http\UploadedFile;
   use Illuminate\Support\Str;
 
   class ProductResourceService
