@@ -11,6 +11,7 @@
   use Exception;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
+  use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
   use Laravel\Socialite\Facades\Socialite;
   use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,6 +30,9 @@
 
     public function redirectToProvider($provider): RedirectResponse|\Illuminate\Http\RedirectResponse
     {
+      if (Auth::user()!=null){
+        return redirect()->to(env('NEXT_WEB_CLIENT_URL'));
+      }
       return Socialite::driver($provider)->redirect();
     }
 
@@ -43,7 +47,7 @@
       $authUser = $this->findOrCreateUser($userModel, $provider);
 
       $token = $authUser->createToken('token_name')->plainTextToken;
-      return response()->json(['token' => $token]);
+      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "/callback?token={$token}");
     }
 
     /**
