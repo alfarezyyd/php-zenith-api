@@ -23,15 +23,15 @@
     public function rules(): array
     {
       return [
-        'name' => 'required|string|max:60',
-        'domain' => 'required|string|max:24',
-        'slogan' => 'required|string|max:48',
-        'location_name' => 'required|string|max:25',
-        'city' => 'required|string|max:50',
-        'zip_code' => 'required|string|max:10',
-        'detail' => 'required|string|max:255',
-        'description' => 'required|string|max:140',
-        'image_path' => 'nullable|file|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+        "name" => ["required", "string", "max:60"],
+        "domain" => ["required", "string", "max:24"],
+        "slogan" => ["required", "string", "max:48"],
+        "location_name" => ["required", "string", "max:25"],
+        "city" => ["required", "string", "max:50"],
+        "zip_code" => ["required", "string", "max:10"],
+        "detail" => ["required", "string", "max:255"],
+        "description" => ["required", "string", "max:140"],
+        "image_path" => ["nullable", "file", "image", "mimes:jpeg,png,jpg,gif,svg", "max:5120"],
       ];
     }
   }
