@@ -15,7 +15,7 @@
     )
     ->withMiddleware(function (Middleware $middleware) {
       $middleware->validateCsrfTokens(
-        except: ['api/*', 'login']
+        except: ['api/*', 'login', 'logout']
       );
     })
     ->withExceptions(function (Exceptions $exceptions) {
