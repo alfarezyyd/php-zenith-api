@@ -2,6 +2,7 @@
 
   namespace App\Http\Controllers;
 
+  use App\Http\Resources\CartResource;
   use App\Models\Cart;
   use App\Models\Product;
   use App\Payloads\WebResponsePayload;
@@ -14,9 +15,10 @@
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(int $cartId): JsonResponse
     {
-      //
+      $cartModel = Cart::query()->with(['products'])->firstOrFail($cartId);
+      return response()->json(new WebResponsePayload(responseMessage: "Cart retrieve successfully", jsonResource: new CartResource($cartModel)));
     }
 
     /**
