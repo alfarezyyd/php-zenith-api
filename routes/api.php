@@ -4,8 +4,10 @@
   use App\Http\Controllers\CartController;
   use App\Http\Controllers\CategoryController;
   use App\Http\Controllers\ExpeditionController;
+  use App\Http\Controllers\OrderController;
   use App\Http\Controllers\ProductController;
   use App\Http\Controllers\StoreController;
+  use App\Http\Controllers\UserProfileController;
   use App\Http\Controllers\WishlistController;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Route;
@@ -52,10 +54,10 @@
     });
 
     Route::prefix('carts')->group(function () {
-      Route::get('', [CartController::class, 'index']);
-      Route::post('', [CartController::class, 'store']);
-      Route::put('/{cardId}', [CartController::class, 'update']);
-      Route::delete('/{cardId}', [CartController::class, 'destroy']);
+      Route::get('/{cartId}', [CartController::class, 'index']);
+      Route::get('/{cartId}/{productId}', [CartController::class, 'attachProductIntoCart']);
+      Route::put('/{cartId}', [CartController::class, 'update']);
+      Route::delete('/{cartId}', [CartController::class, 'destroy']);
     });
 
     Route::prefix('products')->group(function () {
@@ -74,8 +76,20 @@
       Route::post('/', [WishlistController::class, 'store']);
       Route::put('/{wishlistId}', [WishlistController::class, 'update']);
       Route::delete('/{wishlistId}', [WishlistController::class, 'destroy']);
-      Route::get('/{wishtlistId}/{productId}', [WishlistController::class, 'attachProductIntoWishlist']);
-      Route::get('detach/{wishtlistId}/{productId}', [WishlistController::class, 'detachProductFromWishlist']);
+      Route::get('/{wishlistId}/{productId}', [WishlistController::class, 'attachProductIntoWishlist']);
+      Route::delete('/{wishlistId}/{productId}', [WishlistController::class, 'detachProductFromWishlist']);
+    });
+
+    Route::prefix('orders')->group(function () {
+      Route::get('', [OrderController::class, 'index']);
+    });
+
+    Route::prefix('user-profiles')->group(function () {
+      Route::get('', [UserProfileController::class, 'index']);
+      Route::get('', [UserProfileController::class, 'show']);
+      Route::post('', [UserProfileController::class, 'store']);
+      Route::put('/{userProfileId}', [UserProfileController::class, 'update']);
+      Route::delete('/{userProfileId}', [UserProfileController::class, 'destroy']);
     });
   });
 
