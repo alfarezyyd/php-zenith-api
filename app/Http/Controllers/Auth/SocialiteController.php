@@ -14,22 +14,20 @@
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
   use Laravel\Sanctum\NewAccessToken;
+  use Laravel\Sanctum\PersonalAccessToken;
   use Laravel\Socialite\Facades\Socialite;
   use Symfony\Component\HttpFoundation\RedirectResponse;
 
   class SocialiteController extends Controller
   {
     private CartService $cartService;
-    private CommonHelper $commonHelper;
 
     /**
      * @param CartService $cartService
-     * @param CommonHelper $commonHelper
      */
-    public function __construct(CartService $cartService, CommonHelper $commonHelper)
+    public function __construct(CartService $cartService)
     {
       $this->cartService = $cartService;
-      $this->commonHelper = $commonHelper;
     }
 
 
@@ -47,14 +45,7 @@
       }
       // find or create user and send params user get from socialite and provider
       $authUser = $this->findOrCreateUser($userModel, $provider);
-      // Periksa jika pengguna sudah memiliki token yang valid
-      $token = $authUser->tokens()->where('name', 'login_token')->first();
-      if ($token !== null && $this->commonHelper->checkIfExpired($token['expires_at'])) {
-        return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "");
-      }
-
-      // Buat token baru dan arahkan pengguna ke callback dengan token baru
-      $token = $authUser->createToken('login_token', expiresAt: now()->addWeek())->plainTextToken;
+      $token = $authUser->createToken('login_token')->plainTextToken;
       Auth()->login($authUser, true);
       return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "/callback?token={$token}");
     }

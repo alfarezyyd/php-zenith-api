@@ -10,7 +10,7 @@
   /**
    * socialite auth
    */
-  Route::prefix('auth')->group(function () {
+  Route::prefix('auth')->middleware(\App\Http\Middleware\RedirectIfAuthenticated::class)->group(function () {
     Route::get('/{provider}', [SocialiteController::class, 'redirectToProvider']);
     Route::get('/{provider}/callback', [SocialiteController::class, 'handleProvideCallback']);
   });

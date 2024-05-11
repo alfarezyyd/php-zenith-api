@@ -1,5 +1,6 @@
 <?php
 
+  use App\Http\Middleware\RedirectIfAuthenticated;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Foundation\Application;
   use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,7 @@
       $middleware->validateCsrfTokens(
         except: ['api/*', 'login', 'logout']
       );
+      $middleware->append(RedirectIfAuthenticated::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
       $exceptions->render(function (NotFoundHttpException $notFoundHttpException) {
