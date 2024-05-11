@@ -11,10 +11,12 @@
     {
       $productResources = [];
       foreach ($uploadedFiles as $uploadedFile) {
+        $imagePath = "stores/{$productId}/" . Str::uuid() . urlencode("_{$uploadedFile->getClientOriginalName()}");
         $productResources[] = [
-          'image_path' => "stores/{$productId}/" . Str::uuid() . urlencode("_{$uploadedFile->getClientOriginalName()}"),
+          'image_path' => $imagePath,
           'product_id' => $productId
         ];
+        $uploadedFile->storePubliclyAs("stores", $imagePath, "public");
       }
       ProductResource::query()->insert($productResources);
     }

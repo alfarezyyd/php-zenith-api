@@ -12,3 +12,6 @@ SELECT * FROM users;
 SELECT * FROM social_accounts;
 SELECT * FROM carts;
 SELECT * FROM personal_access_tokens;
+SELECT * FROM product_resources;
+SELECT * FROM product_categories;
+SHOW CREATE TABLE personal_access_tokens;

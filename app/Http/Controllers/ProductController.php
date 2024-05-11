@@ -98,7 +98,7 @@
       try {
         DB::beginTransaction();
         $productModel->save();
-        if ($productSaveRequest->hasFile('images')) {
+        if ($validatedProductSaveRequest['images'] !== null) {
           $this->productResourceService->store($productSaveRequest->file('images'), $productModel->id);
         }
         $this->productCategoryService->store($validatedProductSaveRequest['category_ids'], $productModel);
