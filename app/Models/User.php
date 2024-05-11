@@ -14,6 +14,7 @@
   {
     use HasFactory, Notifiable, HasApiTokens;
 
+    protected $with = ['tokens'];
     /**
      * The attributes that are mass assignable.
      *

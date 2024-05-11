@@ -65,8 +65,11 @@
         // Jika sudah ada
         if ($socialAccount) {
           // return user
-          return $socialAccount->user;
-
+          $user = $socialAccount->user;
+          $user->tokens?->where('name', 'login_token')[0]->update([
+            'token' => 'awdawdaw'
+          ]);
+          DB::commit();
           // Jika belum ada
         } else {
 
