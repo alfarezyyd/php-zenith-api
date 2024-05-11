@@ -54,8 +54,8 @@
         DB::beginTransaction();
         if (isset($validatedStoreSaveRequest['image_path'])) {
           $uploadedFile = $validatedStoreSaveRequest['image_path'];
-          $uploadedFile->storePubliclyAs("stores", $uploadedFile->getClientOriginalName(), "public");
           $validatedStoreSaveRequest['image_path'] = "stores/" . Str::uuid() . urlencode("_{$uploadedFile->getClientOriginalName()}");
+          $uploadedFile->storePubliclyAs("stores", $validatedStoreSaveRequest['image_path'], "public");
         }
         $validatedStoreSaveRequest['slug'] = Str::slug($validatedStoreSaveRequest['name']);
         $storeModel = new Store($validatedStoreSaveRequest);
