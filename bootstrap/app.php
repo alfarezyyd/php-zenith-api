@@ -16,9 +16,9 @@
     )
     ->withMiddleware(function (Middleware $middleware) {
       $middleware->validateCsrfTokens(
-        except: ['api/*', 'login', 'logout']
+        except: ['api/*', 'auth/login', 'auth/logout']
       );
-      $middleware->append(RedirectIfAuthenticated::class);
+      $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
       $exceptions->render(function (NotFoundHttpException $notFoundHttpException) {
