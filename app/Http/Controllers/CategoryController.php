@@ -29,7 +29,7 @@
      */
     public function index()
     {
-      $categoriesModel = Category::query()->select();
+      $categoriesModel = Category::query()->select()->get();
       return response()
         ->json((new WebResponsePayload("Category created successfully", jsonResource: CategoryResource::collection($categoriesModel)))
           ->getJsonResource())->setStatusCode(200);

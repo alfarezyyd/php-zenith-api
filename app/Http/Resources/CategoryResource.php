@@ -15,8 +15,8 @@
     public function toArray(Request $request): array
     {
       return [
-        "slug" => $this->slug,
-        "name" => $this->name,
+        "slug" => $this['slug'],
+        "name" => $this['name'],
         "parent_category" => new CategoryResource($this->whenLoaded('parentCategory')),
       ];
     }
