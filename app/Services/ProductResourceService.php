@@ -11,7 +11,7 @@
     {
       $productResources = [];
       foreach ($uploadedFiles as $uploadedFile) {
-        $imagePath = "stores/{$productId}/" . Str::uuid() . urlencode("_{$uploadedFile->getClientOriginalName()}");
+        $imagePath = "{$productId}/" . Str::uuid() . str_replace('+', '-', urlencode("_{$uploadedFile->getClientOriginalName()}"));
         $productResources[] = [
           'image_path' => $imagePath,
           'product_id' => $productId

@@ -31,6 +31,7 @@
         'height' => optional($this->resource)['height'],
         'category' => CategoryResource::make(optional($this->resource))['category'],
         'store' => StoreResource::make(optional($this->resource)['store']),
+        'resources' => ProductResourceResource::collection($this->whenLoaded('resources'))
       ];
     }
   }

@@ -17,7 +17,7 @@
     protected $keyType = 'int';
     public $incrementing = true;
     public $timestamps = true;
-    protected $with = ['store'];
+    protected $with = ['store', 'resources'];
     protected $fillable = [
       'slug',
       'name',
