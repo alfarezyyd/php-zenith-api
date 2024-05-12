@@ -45,14 +45,14 @@
       }
       // find or create user and send params user get from socialite and provider
       $authUser = $this->findOrCreateUser($userModel, $provider);
-      $loginToken = $authUser->tokens()->where('name', 'login_token')[0];
+      $loginToken = $authUser->tokens()->where('name', 'login_token')->first();
       if ($loginToken !== null) {
-        $newLoginToken = $authUser->updateLoginToken();
+        $newLoginToken = $authUser->updateLoginToken($authUser);
       } else {
-        $newLoginToken = $authUser->createToken('login_token')->plainTextToken;
+        $newLoginToken = $authUser->createToken('login_token');
       }
       Auth()->login($authUser, true);
-      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "/callback?token={$newLoginToken}");
+      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "/callback?token={$newLoginToken->plainTextToken}");
     }
 
     /**
@@ -69,8 +69,8 @@
 
         // Jika sudah ada
         if ($socialAccount) {
-          // return user
           return $socialAccount->user;
+          // return user
           // Jika belum ada
         } else {
 

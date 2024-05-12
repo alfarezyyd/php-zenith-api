@@ -8,6 +8,7 @@
   use Illuminate\Database\Eloquent\Relations\HasOne;
   use Illuminate\Foundation\Auth\User as Authenticatable;
   use Illuminate\Notifications\Notifiable;
+  use Illuminate\Support\Facades\DB;
   use Laravel\Sanctum\HasApiTokens;
   use Laravel\Sanctum\NewAccessToken;
 
@@ -63,13 +64,16 @@
       return $this->hasOne(Cart::class, 'user_id', 'id');
     }
 
-    public function updateLoginToken(): NewAccessToken
+    public function updateLoginToken(User $authUser): NewAccessToken
     {
-      $plainTextToken = $this->generateTokenString();
-      $loginToken = $this->tokens?->where('name', 'login_token')[0];
-      $loginToken->update([
-        'token' => hash('sha256', $plainTextToken),
-      ]);
-      return new NewAccessToken($loginToken, $loginToken->getKey() . '|' . $plainTextToken);
+      return DB::transaction(function () use ($authUser) {
+        $plainTextToken = $authUser->generateTokenString();
+        $loginToken = $authUser->tokens->where('name', 'login_token')[0];
+        $loginToken->update([
+          'token' => hash('sha256', $plainTextToken),
+        ]);
+        DB::commit();
+        return new NewAccessToken($loginToken, $loginToken->getKey() . '|' . $plainTextToken);
+      });
     }
   }
