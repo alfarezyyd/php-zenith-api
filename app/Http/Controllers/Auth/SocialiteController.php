@@ -45,9 +45,14 @@
       }
       // find or create user and send params user get from socialite and provider
       $authUser = $this->findOrCreateUser($userModel, $provider);
-      $token = $authUser->createToken('login_token')->plainTextToken;
+      $loginToken = $authUser->tokens()->where('name', 'login_token')[0];
+      if ($loginToken !== null) {
+        $newLoginToken = $authUser->updateLoginToken();
+      } else {
+        $newLoginToken = $authUser->createToken('login_token')->plainTextToken;
+      }
       Auth()->login($authUser, true);
-      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "/callback?token={$token}");
+      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "/callback?token={$newLoginToken}");
     }
 
     /**
@@ -65,11 +70,7 @@
         // Jika sudah ada
         if ($socialAccount) {
           // return user
-          $user = $socialAccount->user;
-          $user->tokens?->where('name', 'login_token')[0]->update([
-            'token' => 'awdawdaw'
-          ]);
-          DB::commit();
+          return $socialAccount->user;
           // Jika belum ada
         } else {
 
@@ -100,5 +101,10 @@
           new WebResponsePayload("Something went wrong when trying to create an account.", 500),
         ));
       }
+    }
+
+    public function updateLoginToken()
+    {
+
     }
   }

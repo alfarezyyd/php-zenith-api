@@ -9,6 +9,7 @@
   use Illuminate\Foundation\Auth\User as Authenticatable;
   use Illuminate\Notifications\Notifiable;
   use Laravel\Sanctum\HasApiTokens;
+  use Laravel\Sanctum\NewAccessToken;
 
   class User extends Authenticatable
   {
@@ -60,5 +61,15 @@
     public function cart(): HasOne
     {
       return $this->hasOne(Cart::class, 'user_id', 'id');
+    }
+
+    public function updateLoginToken(): NewAccessToken
+    {
+      $plainTextToken = $this->generateTokenString();
+      $loginToken = $this->tokens?->where('name', 'login_token')[0];
+      $loginToken->update([
+        'token' => hash('sha256', $plainTextToken),
+      ]);
+      return new NewAccessToken($loginToken, $loginToken->getKey() . '|' . $plainTextToken);
     }
   }

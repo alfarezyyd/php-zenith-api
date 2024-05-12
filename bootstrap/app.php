@@ -19,6 +19,9 @@
         except: ['api/*', 'auth/login', 'auth/logout']
       );
       $middleware->statefulApi();
+      $middleware->alias([
+        'redirectIfAuthenticated' => RedirectIfAuthenticated::class,
+      ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
       $exceptions->render(function (NotFoundHttpException $notFoundHttpException) {
