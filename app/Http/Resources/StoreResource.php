@@ -16,6 +16,7 @@
     {
       return [
         'name' => $this['name'],
+        'slug' => $this['slug'],
         'domain' => $this['domain'],
         'slogan' => $this['slogan'],
         'location_name' => $this['location_name'],
