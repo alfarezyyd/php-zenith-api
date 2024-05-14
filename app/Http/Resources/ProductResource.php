@@ -29,7 +29,7 @@
         'weight' => optional($this->resource)['weight'],
         'width' => optional($this->resource)['width'],
         'height' => optional($this->resource)['height'],
-        'category' => CategoryResource::make(optional($this->resource))['category'],
+        'category' => CategoryResource::make(optional($this->resource))['categories'],
         'store' => StoreResource::make(optional($this->resource)['store']),
         'resources' => ProductResourceResource::collection($this->whenLoaded('resources'))
       ];
