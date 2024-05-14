@@ -69,20 +69,20 @@
       //
     }
 
-    public function attachProductIntoCart(int $cartId, int $productId): JsonResponse
+    public function attachProductIntoCart(int $productId): JsonResponse
     {
       $productModel = Product::query()->findOrFail($productId);
-      $cartModel = Cart::query()->findOrFail($cartId)->where('user_id', Auth::id());
+      $cartModel = Auth::user()->cart();
       $cartModel->products()->attach($productModel);
       return response()
         ->json((new WebResponsePayload("Product attached successfully"))
           ->getJsonResource())->setStatusCode(200);
     }
 
-    public function detachProductFromCart(int $cartId, int $productId): JsonResponse
+    public function detachProductFromCart(int $productId): JsonResponse
     {
       $productModel = Product::query()->findOrFail($productId);
-      $cartModel = Cart::query()->findOrFail($cartId)->where('user_id', Auth::id());
+      $cartModel = Auth::user()->cart();
       $cartModel->products()->detach($productModel);
       return response()
         ->json((new WebResponsePayload("Product detached successfully"))
