@@ -54,7 +54,7 @@
     });
 
     Route::prefix('carts')->group(function () {
-      Route::get('/{cartId}', [CartController::class, 'index']);
+      Route::get('', [CartController::class, 'index']);
       Route::post('/{productId}', [CartController::class, 'attachProductIntoCart']);
       Route::put('/{cartId}', [CartController::class, 'update']);
       Route::delete('/{cartId}', [CartController::class, 'destroy']);

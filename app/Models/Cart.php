@@ -23,10 +23,12 @@
 
     public function products(): BelongsToMany
     {
-      return $this->belongsToMany(Product::class, 'product_carts', 'cart_id', 'product_id');
+      return $this->belongsToMany(Product::class, 'product_carts', 'cart_id', 'product_id')
+        ->using(ProductCart::class);
     }
 
-    public function user(): HasOne{
+    public function user(): HasOne
+    {
       return $this->hasOne(User::class, 'user_id', 'id');
     }
   }

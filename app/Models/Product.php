@@ -56,6 +56,7 @@
 
     public function carts(): BelongsToMany
     {
-      return $this->belongsToMany(Cart::class, 'product_carts', 'product_id', 'cart_id');
+      return $this->belongsToMany(Cart::class, 'product_carts', 'product_id', 'cart_id')
+        ->using(ProductCart::class);
     }
   }

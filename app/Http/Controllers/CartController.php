@@ -2,9 +2,10 @@
 
   namespace App\Http\Controllers;
 
-  use App\Http\Resources\CartResource;
+  use App\Http\Resources\ProductCartResource;
   use App\Models\Cart;
   use App\Models\Product;
+  use App\Models\ProductCart;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Http\Request;
@@ -15,10 +16,12 @@
     /**
      * Display a listing of the resource.
      */
-    public function index(int $cartId): JsonResponse
+    public function index(): JsonResponse
     {
-      $cartModel = Cart::query()->with(['products'])->firstOrFail($cartId);
-      return response()->json(new WebResponsePayload(responseMessage: "Cart retrieve successfully", jsonResource: new CartResource($cartModel)));
+      $cartModel = ProductCart::query()->where('cart_id', Auth::user()->cart()->first()->id)->get();
+      return response()
+        ->json((new WebResponsePayload("Cart retrieve successfully", jsonResource: ProductCartResource::collection($cartModel)))
+          ->getJsonResource())->setStatusCode(200);
     }
 
     /**
@@ -72,8 +75,16 @@
     public function attachProductIntoCart(int $productId): JsonResponse
     {
       $productModel = Product::query()->findOrFail($productId);
-      $cartModel = Auth::user()->cart();
-      $cartModel->products()->attach($productModel);
+      $cartModel = Auth::user()->cart()->first();
+      $newProductCart = [
+        'product_id' => $productId,
+        'cart_id' => $cartModel->id,
+        'sub_total_price' => $productModel['price'],
+        'quantity' => 1,
+      ];
+
+      $productCart = new ProductCart($newProductCart);
+      $productCart->save();
       return response()
         ->json((new WebResponsePayload("Product attached successfully"))
           ->getJsonResource())->setStatusCode(200);
