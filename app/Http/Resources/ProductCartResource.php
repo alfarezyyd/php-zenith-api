@@ -18,6 +18,8 @@
     {
       return [
         'id' => $this['id'],
+        'sub_total_price' => $this['sub_total_price'],
+        'quantity' => $this['quantity'],
         'product' => new ProductResource($this->whenLoaded('product')),
       ];
     }
