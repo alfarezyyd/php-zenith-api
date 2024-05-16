@@ -7,7 +7,9 @@
   use Illuminate\Database\Eloquent\Relations\HasOne;
   use Illuminate\Foundation\Auth\User as Authenticatable;
   use Illuminate\Notifications\Notifiable;
+  use Illuminate\Support\Facades\DB;
   use Laravel\Sanctum\HasApiTokens;
+  use Laravel\Sanctum\NewAccessToken;
 
   class User extends Authenticatable
   {
@@ -64,5 +66,18 @@
     public function profile(): HasOne
     {
       return $this->hasOne(UserProfile::class, 'user_id', 'id');
+    }
+
+    public function updateLoginToken(User $authUser): NewAccessToken
+    {
+      return DB::transaction(function () use ($authUser) {
+        $plainTextToken = $authUser->generateTokenString();
+        $loginToken = $authUser->tokens->where('name', 'login_token')[0];
+        $loginToken->update([
+          'token' => hash('sha256', $plainTextToken),
+        ]);
+        DB::commit();
+        return new NewAccessToken($loginToken, $loginToken->getKey() . '|' . $plainTextToken);
+      });
     }
   }

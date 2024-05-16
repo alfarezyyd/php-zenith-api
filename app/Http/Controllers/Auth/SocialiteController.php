@@ -7,7 +7,6 @@
   use App\Models\User;
   use App\Payloads\WebResponsePayload;
   use App\Services\CartService;
-  use App\Services\UserService;
   use Exception;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
@@ -18,16 +17,13 @@
   class SocialiteController extends Controller
   {
     private CartService $cartService;
-    private UserService $userService;
 
     /**
      * @param CartService $cartService
-     * @param UserService $userService
      */
-    public function __construct(CartService $cartService, UserService $userService)
+    public function __construct(CartService $cartService)
     {
       $this->cartService = $cartService;
-      $this->userService = $userService;
     }
 
 
@@ -47,7 +43,7 @@
       $authUser = $this->findOrCreateUser($userModel, $provider);
       $loginToken = $authUser->tokens()->where('name', 'login_token')->first();
       if ($loginToken !== null) {
-        $newLoginToken = $this->userService->updateLoginToken($authUser);
+        $newLoginToken = $authUser->updateLoginToken($authUser);
       } else {
         $newLoginToken = $authUser->createToken('login_token');
       }
