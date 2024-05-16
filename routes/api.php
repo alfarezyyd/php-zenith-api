@@ -4,6 +4,7 @@
   use App\Http\Controllers\CartController;
   use App\Http\Controllers\CategoryController;
   use App\Http\Controllers\ExpeditionController;
+  use App\Http\Controllers\MidtransController;
   use App\Http\Controllers\OrderController;
   use App\Http\Controllers\ProductController;
   use App\Http\Controllers\StoreController;
@@ -90,6 +91,10 @@
       Route::post('', [UserProfileController::class, 'store']);
       Route::put('/{userProfileId}', [UserProfileController::class, 'update']);
       Route::delete('/{userProfileId}', [UserProfileController::class, 'destroy']);
+    });
+
+    Route::prefix('checkout')->group(function () {
+      Route::post('', [MidtransController::class, 'initPayment']);
     });
   });
 
