@@ -2,15 +2,12 @@
 
   namespace App\Models;
 
-  // use Illuminate\Contracts\Auth\MustVerifyEmail;
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Relations\HasMany;
   use Illuminate\Database\Eloquent\Relations\HasOne;
   use Illuminate\Foundation\Auth\User as Authenticatable;
   use Illuminate\Notifications\Notifiable;
-  use Illuminate\Support\Facades\DB;
   use Laravel\Sanctum\HasApiTokens;
-  use Laravel\Sanctum\NewAccessToken;
 
   class User extends Authenticatable
   {
@@ -64,16 +61,8 @@
       return $this->hasOne(Cart::class, 'user_id', 'id');
     }
 
-    public function updateLoginToken(User $authUser): NewAccessToken
+    public function profile(): HasOne
     {
-      return DB::transaction(function () use ($authUser) {
-        $plainTextToken = $authUser->generateTokenString();
-        $loginToken = $authUser->tokens->where('name', 'login_token')[0];
-        $loginToken->update([
-          'token' => hash('sha256', $plainTextToken),
-        ]);
-        DB::commit();
-        return new NewAccessToken($loginToken, $loginToken->getKey() . '|' . $plainTextToken);
-      });
+      return $this->hasOne(UserProfile::class, 'user_id', 'id');
     }
   }

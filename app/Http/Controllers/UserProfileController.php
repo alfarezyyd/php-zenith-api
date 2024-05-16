@@ -45,20 +45,20 @@
     public function store(UserProfileCreateRequest $userProfileRequest)
     {
       $validatedUserProfileRequest = $userProfileRequest->validated();
-      $validatedUserProfileRequest['id'] = Auth::id();
+      $validatedUserProfileRequest['user_id'] = Auth::id();
       try {
         DB::beginTransaction();
         $userProfileModel = new UserProfile($validatedUserProfileRequest);
         $userProfileModel->save();
         DB::commit();
         return response()->json(
-          new WebResponsePayload("User profile successfully created."),
+          (new WebResponsePayload("User profile successfully created."))->getJsonResource(),
         )->setStatusCode(201);
-      } catch (\Exception) {
+      } catch (\Exception $e) {
         DB::rollback();
         throw new HttpResponseException(response()->json(
-          new WebResponsePayload("User profile failed to create", 500),
-        ));
+          (new WebResponsePayload("User profile failed to create", errorInformation: $e->getMessage()))->getJsonResource(),
+        )->setStatusCode(500));
       }
     }
 

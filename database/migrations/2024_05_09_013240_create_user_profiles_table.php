@@ -20,6 +20,8 @@ return new class extends Migration
             $table->date('birth_date')->nullable(false);
             $table->enum('gender', ['MALE', 'FEMALE'])->nullable(false);
             $table->string('image_path', 255)->nullable();
+            $table->unsignedBigInteger('user_id')->nullable(false);
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

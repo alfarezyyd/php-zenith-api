@@ -28,7 +28,7 @@
         "first_name" => ["required", "string", "max:255"],
         "last_name" => ["required", "string", "max:255"],
         "email" => ["required", "email", "max:255", "unique:user_profiles,email"],
-        "phone" => ["required", "numeric", "max:255"],
+        "phone" => ["required", "string", "max:255"],
         "birth_date" => ["required", "date", "date_format:Y-m-d"],
         "gender" => ["required", "string", Rule::enum(UserGender::class)],
         "image_path" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:5120"],
