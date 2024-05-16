@@ -2,32 +2,32 @@
 
   namespace App\Http\Controllers\Auth;
 
-  use App\Helpers\CommonHelper;
   use App\Http\Controllers\Controller;
   use App\Models\SocialAccount;
   use App\Models\User;
   use App\Payloads\WebResponsePayload;
   use App\Services\CartService;
+  use App\Services\UserService;
   use Exception;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
-  use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
-  use Laravel\Sanctum\NewAccessToken;
-  use Laravel\Sanctum\PersonalAccessToken;
   use Laravel\Socialite\Facades\Socialite;
   use Symfony\Component\HttpFoundation\RedirectResponse;
 
   class SocialiteController extends Controller
   {
     private CartService $cartService;
+    private UserService $userService;
 
     /**
      * @param CartService $cartService
+     * @param UserService $userService
      */
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, UserService $userService)
     {
       $this->cartService = $cartService;
+      $this->userService = $userService;
     }
 
 
@@ -47,7 +47,7 @@
       $authUser = $this->findOrCreateUser($userModel, $provider);
       $loginToken = $authUser->tokens()->where('name', 'login_token')->first();
       if ($loginToken !== null) {
-        $newLoginToken = $authUser->updateLoginToken($authUser);
+        $newLoginToken = $this->userService->updateLoginToken($authUser);
       } else {
         $newLoginToken = $authUser->createToken('login_token');
       }
@@ -101,10 +101,5 @@
           new WebResponsePayload("Something went wrong when trying to create an account.", 500),
         ));
       }
-    }
-
-    public function updateLoginToken()
-    {
-
     }
   }
