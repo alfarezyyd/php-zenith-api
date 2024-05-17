@@ -11,6 +11,7 @@
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\DB;
+  use Illuminate\Support\Facades\Request;
   use Laravel\Socialite\Facades\Socialite;
   use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -41,14 +42,10 @@
       }
       // find or create user and send params user get from socialite and provider
       $authUser = $this->findOrCreateUser($userModel, $provider);
-      $loginToken = $authUser->tokens()->where('name', 'login_token')->first();
-      if ($loginToken !== null) {
-        $newLoginToken = $authUser->updateLoginToken($authUser);
-      } else {
-        $newLoginToken = $authUser->createToken('login_token');
-      }
+      auth('web')->login($authUser);
+      session()->regenerate();
       Auth()->login($authUser, true);
-      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . "/callback?token={$newLoginToken->plainTextToken}");
+      return redirect()->to(env('NEXT_WEB_CLIENT_URL'));
     }
 
     /**
@@ -99,4 +96,11 @@
       }
     }
 
+    public function logoutHandler(Request $request)
+    {
+      auth('web')->logout();
+      $request->session()->invalidate();
+      $request->session()->regenerateToken();
+      return redirect()->to(env('NEXT_WEB_CLIENT_URL'));
+    }
   }

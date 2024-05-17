@@ -18,7 +18,6 @@
       $middleware->validateCsrfTokens(
         except: ['api/*', 'auth/login', 'auth/logout']
       );
-      $middleware->statefulApi();
       $middleware->alias([
         'redirectIfAuthenticated' => RedirectIfAuthenticated::class,
       ]);

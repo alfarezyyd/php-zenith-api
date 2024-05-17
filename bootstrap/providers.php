@@ -4,5 +4,4 @@
     App\Providers\AppServiceProvider::class,
     App\Providers\HelperServiceProvider::class,
     App\Providers\SearchServiceProvider::class,
-    App\Providers\FortifyServiceProvider::class,
   ];
