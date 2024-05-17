@@ -21,10 +21,8 @@
      */
     public function rules(): array
     {
-      return [
-        'products' => 'required|array',
-        'products.*.id' => 'required|numeric|gt:0',
-        'products.*.quantity' => 'required|numeric|gt:0',
+        return [
+        'gross_amount' => 'required|numeric|gte:0',
       ];
     }
   }

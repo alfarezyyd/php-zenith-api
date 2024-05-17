@@ -19,16 +19,12 @@
       Config::$isProduction = env('MIDTRANS_IS_PRODUCTION');
       Config::$isSanitized = env('MIDTRANS_IS_SANITIZED');
       Config::$is3ds = env('MIDTRANS_IS_3DS');
+
       $validatedPaymentRequest = $paymentRequest->validated();
-      $productCollection = Product::query()->whereIn('id', array_column($validatedPaymentRequest['products'], 'id'))->get();
-      $grossAmount = 0;
-      foreach ($productCollection as $index => $product) {
-        $grossAmount += ($product['price'] * array_column($validatedPaymentRequest['products'], 'id')[$index]);
-      }
       $paymentPayload = [
         'transaction_details' => [
           'order_id' => Str::uuid()->toString(),
-          'gross_amount' => $grossAmount
+          'gross_amount' => $validatedPaymentRequest['gross_amount']
         ],
         'customer_details' => [
           'first_name' => Auth::user()->profile['first_name'],
