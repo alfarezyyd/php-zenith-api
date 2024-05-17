@@ -42,10 +42,9 @@
       }
       // find or create user and send params user get from socialite and provider
       $authUser = $this->findOrCreateUser($userModel, $provider);
-      auth('web')->login($authUser);
-      session()->regenerate();
+      $plainTextToken = $authUser->createToken('login_token')->plainTextToken;
       Auth()->login($authUser, true);
-      return redirect()->to(env('NEXT_WEB_CLIENT_URL'));
+      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . 'callback?token=' . $plainTextToken);
     }
 
     /**
@@ -98,9 +97,6 @@
 
     public function logoutHandler(Request $request)
     {
-      auth('web')->logout();
-      $request->session()->invalidate();
-      $request->session()->regenerateToken();
-      return redirect()->to(env('NEXT_WEB_CLIENT_URL'));
+
     }
   }

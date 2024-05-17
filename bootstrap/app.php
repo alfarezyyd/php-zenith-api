@@ -18,6 +18,7 @@
       $middleware->validateCsrfTokens(
         except: ['api/*', 'auth/login', 'auth/logout']
       );
+      $middleware->statefulApi();
       $middleware->alias([
         'redirectIfAuthenticated' => RedirectIfAuthenticated::class,
       ]);
@@ -25,7 +26,7 @@
     ->withExceptions(function (Exceptions $exceptions) {
       $exceptions->render(function (NotFoundHttpException $notFoundHttpException) {
         return response()
-          ->json((new WebResponsePayload( "Entity not found", errorInformation: $notFoundHttpException->getMessage()))
+          ->json((new WebResponsePayload("Entity not found", errorInformation: $notFoundHttpException->getMessage()))
             ->getJsonResource())->setStatusCode(404);
       });
       //
