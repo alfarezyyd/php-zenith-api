@@ -14,7 +14,6 @@
 
 
   Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-
     Route::prefix('expeditions')->group(function () {
       Route::get('', [ExpeditionController::class, 'index']);
       Route::post('', [ExpeditionController::class, 'store']);

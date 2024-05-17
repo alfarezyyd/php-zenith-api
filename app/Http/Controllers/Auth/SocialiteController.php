@@ -10,6 +10,7 @@
   use Exception;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
+  use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Facades\Request;
   use Laravel\Socialite\Facades\Socialite;
@@ -42,9 +43,13 @@
       }
       // find or create user and send params user get from socialite and provider
       $authUser = $this->findOrCreateUser($userModel, $provider);
-      $plainTextToken = $authUser->createToken('login_token')->plainTextToken;
-      Auth()->login($authUser, true);
-      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . 'callback?token=' . $plainTextToken);
+      $loginToken = $authUser->tokens()->where('name', 'login_token')->first();
+      if ($loginToken !== null) {
+        $authUser->deleteToken();;
+      }
+      $newLoginToken = $authUser->createToken('login_token');
+      Auth::login($authUser);
+      return redirect()->to(env('NEXT_WEB_CLIENT_URL') . '/callback?token=' . $newLoginToken->plainTextToken);
     }
 
     /**

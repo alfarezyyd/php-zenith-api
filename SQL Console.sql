@@ -19,3 +19,5 @@ SELECT * FROM product_carts;
 SELECT * FROM users;
 SHOW CREATE TABLE personal_access_tokens;
 SELECT * FROM user_profiles;
+SELECT * FROM social_accounts;
+SELECT * FROM users;
