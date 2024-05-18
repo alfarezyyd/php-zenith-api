@@ -40,8 +40,9 @@
 
     Route::prefix('stores')->group(function () {
       Route::get('', [StoreController::class, 'index']);
-      Route::post('', [StoreController::class, 'store']);
+      Route::get('find', [StoreController::class, 'findByUser']);
       Route::get('/{storeSlug}', [StoreController::class, 'show']);
+      Route::post('', [StoreController::class, 'store']);
       Route::put('/{storeId}', [StoreController::class, 'update']);
       Route::delete('/{storeId}', [StoreController::class, 'destroy']);
     });
@@ -57,7 +58,7 @@
       Route::get('', [ProductController::class, 'index']);
       Route::get('/{categorySlug}', [ProductController::class, 'indexByCategory']);
       Route::get('/{storeSlug}/{categorySlug}', [ProductController::class, 'show']);
-      Route::post('/{storeId}', [ProductController::class, 'store']);
+      Route::post('/{storeSlug}', [ProductController::class, 'store']);
       Route::put('/{productId}', [ProductController::class, 'update']);
       Route::delete('/{storeSlug}/{productId}', [ProductController::class, 'destroy']);
     });

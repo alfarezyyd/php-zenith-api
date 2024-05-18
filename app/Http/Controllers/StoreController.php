@@ -7,7 +7,6 @@
   use App\Http\Resources\StoreResource;
   use App\Models\Store;
   use App\Payloads\WebResponsePayload;
-  use HttpResponseException;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
@@ -68,7 +67,7 @@
         throw new HttpResponseException("Error occurred when write to DB", 500);
       }
       return response()
-        ->json((new WebResponsePayload("Store created successfully"))
+        ->json((new WebResponsePayload("Store created successfully", jsonResource: new StoreResource(['slug' => $validatedStoreSaveRequest['slug']])))
           ->getJsonResource())->setStatusCode(201);
     }
 
@@ -80,7 +79,7 @@
       $storeModel = Store::query()->where('slug', $storeSlug)->firstOrFail();
       return response()
         ->json((new WebResponsePayload("Store retrieved successfully", jsonResource: new StoreResource($storeModel)))
-          ->getJsonResource())->setStatusCode(200);
+          ->getJsonResource());
     }
 
     /**
@@ -113,7 +112,15 @@
       $loggedUserId = Auth::id();
       Store::query()->findOrFail($storeId)->where('user_id', $loggedUserId)->delete();
       return response()
-        ->json((new WebResponsePayload("Store deleted successfully"))
+        ->json((new WebResponsePayload("Store retrieved successfully"))
           ->getJsonResource())->setStatusCode(200);
+    }
+
+    public function findByUser(): JsonResponse
+    {
+      $storeModel = Store::query()->where('user_id', Auth::id())->select(['slug'])->firstOrFail();
+      return response()
+        ->json((new WebResponsePayload("Product deleted successfully", jsonResource: new StoreResource($storeModel)))
+          ->getJsonResource());
     }
   }

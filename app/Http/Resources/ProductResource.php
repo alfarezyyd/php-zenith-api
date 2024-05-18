@@ -16,12 +16,12 @@
     public function toArray(Request $request): array
     {
       return [
-        'id' => $this['id'],
+        'id' => optional($this->resource)['id'],
         'slug' => optional($this->resource)['slug'],
-        'name' => $this['name'],
-        'condition' => $this['condition'],
+        'name' => optional($this->resource)['name'],
+        'condition' => optional($this->resource)['condition'],
         'description' => optional($this->resource)['description'],
-        'price' => $this['price'],
+        'price' => optional($this->resource)['price'],
         'minimum_order' => optional($this->resource)['minimum_order'],
         'status' => optional($this->resource)['status'],
         'stock' => optional($this->resource)['stock'],

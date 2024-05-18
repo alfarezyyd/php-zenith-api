@@ -5,9 +5,11 @@
   use App\Helpers\CommonHelper;
   use App\Http\Requests\ProductSaveRequest;
   use App\Http\Resources\ProductResource;
+  use App\Http\Resources\StoreResource;
   use App\Models\Category;
   use App\Models\Product;
   use App\Models\Store;
+  use App\Models\User;
   use App\Payloads\WebResponsePayload;
   use App\Repository\Contract\SearchRepository;
   use App\Services\ProductCategoryService;
@@ -73,6 +75,15 @@
       return response()->json($webResponse->getJsonResource())->setStatusCode(200);
     }
 
+    public function indexByStore(string $storeSlug)
+    {
+      $storeModel = Store::query()->where('slug', $storeSlug)->where('id', Auth::id())->firstOrFail();
+      $storeModel->load('products');
+      return response()->json((new WebResponsePayload(
+        'Store retrieved succesfully', jsonResource: new StoreResource($storeModel)
+      ))->getJsonResource())->setStatusCode(200);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -85,13 +96,10 @@
      * Store a newly created resource in storage.
      * @throws HttpResponseException
      */
-    public function store(ProductSaveRequest $productSaveRequest, int $storeId): JsonResponse
+    public function store(ProductSaveRequest $productSaveRequest, string $storeSlug): JsonResponse
     {
       $validatedProductSaveRequest = $productSaveRequest->validated();
-      $isStoreExists = Store::query()->where('id', $storeId)->exists();
-      if (!$isStoreExists) {
-        throw new NotFoundHttpException("Store not found");
-      }
+      $storeId = Store::query()->where('slug', $storeSlug)->select('id')->firstOrFail();
       $validatedProductSaveRequest['store_id'] = $storeId;
       $validatedProductSaveRequest['slug'] = Str::slug($validatedProductSaveRequest['name']);
       $productModel = new Product($validatedProductSaveRequest);
@@ -159,7 +167,7 @@
     public function destroy(string $storeSlug, int $productId): JsonResponse
     {
       $storeModel = Store::query()->with('products')->where('slug', $storeSlug)->where('user_id', Auth::id())->firstOrFail();
-       $storeModel->products->where('product_id', $productId)->firstOrFail()->delete();
+      $storeModel->products->where('product_id', $productId)->firstOrFail()->delete();
       return response()
         ->json((new WebResponsePayload("Product deleted successfully"))
           ->getJsonResource());
