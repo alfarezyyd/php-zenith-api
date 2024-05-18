@@ -31,7 +31,6 @@
         "description" => ["required", "string", "min:10"],
         "price" => ["required", "numeric", "min:1"],
         "minimum_order" => ["required", "numeric", "min:1"],
-        "status" => ["required", "string", Rule::enum(ProductStatus::class)],
         "stock" => ["required", "numeric", "min:1"],
         "sku" => ["required", "string", "max:50"],
         "weight" => ["required", "numeric", "min:1"],
