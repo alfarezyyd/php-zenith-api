@@ -52,8 +52,8 @@
       $validatedStoreSaveRequest['user_id'] = Auth::id();
       try {
         DB::beginTransaction();
-        if (isset($validatedStoreSaveRequest['image_path'])) {
-          $uploadedFile = $validatedStoreSaveRequest['image_path'];
+        if (isset($validatedStoreSaveRequest['image'])) {
+          $uploadedFile = $validatedStoreSaveRequest['image'];
           $validatedStoreSaveRequest['image_path'] = "stores/" . Str::uuid() . urlencode("_{$uploadedFile->getClientOriginalName()}");
           $uploadedFile->storePubliclyAs("stores", $validatedStoreSaveRequest['image_path'], "public");
         }

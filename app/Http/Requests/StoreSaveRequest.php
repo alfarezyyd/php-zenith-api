@@ -31,7 +31,7 @@
         "zip_code" => ["required", "string", "max:10"],
         "detail" => ["required", "string", "max:255"],
         "description" => ["required", "string", "max:140"],
-        "image_path" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:5120"],
+        "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:5120"],
       ];
     }
   }
