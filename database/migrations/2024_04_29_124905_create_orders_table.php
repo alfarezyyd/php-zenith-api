@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedMediumInteger('total_price')->nullable(false);
             $table->enum('status', [ 'PROCESSED', 'CONFIRMED', 'SENT', 'FINISHED', 'CANCELLED']);
-            $table->enum('payment_method', ['CASH_ON_DELIVERY' , 'TRANSFER']);
+            $table->enum('payment_method', ['CASH_ON_DELIVERY' , 'TRANSFER'])->nullable();
             $table->unsignedBigInteger('address_id')->nullable(false);
             $table->unsignedBigInteger('user_id')->nullable(false);
             $table->unsignedSmallInteger('expedition_id')->nullable(false);

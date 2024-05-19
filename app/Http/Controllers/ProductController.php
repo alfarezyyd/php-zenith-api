@@ -27,7 +27,6 @@
     private CommonHelper $commonHelper;
     private ProductResourceService $productResourceService;
     private ProductCategoryService $productCategoryService;
-    private SearchRepository $searchRepository;
 
     /**
      * @param CommonHelper $commonHelper
@@ -35,12 +34,11 @@
      * @param ProductCategoryService $productCategoryService
      * @param SearchRepository $searchRepository
      */
-    public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService, SearchRepository $searchRepository)
+    public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService)
     {
       $this->commonHelper = $commonHelper;
       $this->productResourceService = $productResourceService;
       $this->productCategoryService = $productCategoryService;
-      $this->searchRepository = $searchRepository;
     }
 
 
@@ -49,11 +47,8 @@
      */
     public function index(): JsonResponse
     {
-      if (request()->has('q')) {
-        $productModel = $this->searchRepository->search(request('q'));
-      } else {
-        $productModel = Product::query()->with(['categories', 'store'])->get();
-      }
+
+      $productModel = Product::query()->with(['categories', 'store'])->get();
       return response()
         ->json((new WebResponsePayload("Product retrieve successfully", jsonResource: ProductResource::collection($productModel)))
           ->getJsonResource())->setStatusCode(200);
