@@ -76,7 +76,7 @@
      */
     public function show(string $storeSlug): JsonResponse
     {
-      $storeModel = Store::query()->where('slug', $storeSlug)->firstOrFail();
+      $storeModel = Store::query()->where('slug', $storeSlug)->with(['products'])->firstOrFail()->getModel();
       return response()
         ->json((new WebResponsePayload("Store retrieved successfully", jsonResource: new StoreResource($storeModel)))
           ->getJsonResource());

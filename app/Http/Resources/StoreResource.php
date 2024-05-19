@@ -26,7 +26,7 @@
         'detail' => $this['detail'],
         'description' => $this['description'],
         'image_path' => $this['image_path'],
-        'products' => new ProductResource($this->whenLoaded('products')),
+        'products' => ProductResource::collection($this->whenLoaded('products')),
       ];
     }
   }
