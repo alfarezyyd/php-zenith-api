@@ -99,8 +99,8 @@
     public function store(ProductSaveRequest $productSaveRequest, string $storeSlug): JsonResponse
     {
       $validatedProductSaveRequest = $productSaveRequest->validated();
-      $storeId = Store::query()->where('slug', $storeSlug)->select('id')->firstOrFail();
-      $validatedProductSaveRequest['store_id'] = $storeId;
+      $storeModel = Store::query()->where('slug', $storeSlug)->select('id')->firstOrFail();
+      $validatedProductSaveRequest['store_id'] = $storeModel['id'];
       $validatedProductSaveRequest['slug'] = Str::slug($validatedProductSaveRequest['name']);
       $productModel = new Product($validatedProductSaveRequest);
       try {

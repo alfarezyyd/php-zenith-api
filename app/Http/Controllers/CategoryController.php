@@ -29,9 +29,9 @@
      */
     public function index()
     {
-      $categoriesModel = Category::query()->select()->get();
+      $categoriesModel = Category::query()->get();
       return response()
-        ->json((new WebResponsePayload("Category created successfully", jsonResource: CategoryResource::collection($categoriesModel)))
+        ->json((new WebResponsePayload("Category retrieved successfully", jsonResource: CategoryResource::collection($categoriesModel)))
           ->getJsonResource())->setStatusCode(200);
     }
 
