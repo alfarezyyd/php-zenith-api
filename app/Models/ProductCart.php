@@ -16,6 +16,7 @@
     protected $relatedKey = 'product_id';
     protected $with = ['product'];
     protected $fillable = [
+      'store_id',
       'product_id',
       'cart_id',
       'sub_total_price',
@@ -30,5 +31,10 @@
     public function cart(): BelongsTo
     {
       return $this->belongsTo(Cart::class, 'cart_id', 'id');
+    }
+
+    public function store(): BelongsTo
+    {
+      return $this->belongsTo(Store::class, 'store_id', 'id');
     }
   }

@@ -67,7 +67,7 @@
         throw new HttpResponseException("Error occurred when write to DB", 500);
       }
       return response()
-        ->json((new WebResponsePayload("Store created successfully", jsonResource: new StoreResource(['slug' => $validatedStoreSaveRequest['slug']])))
+        ->json((new WebResponsePayload("Store created successfully", jsonResource: new StoreResource($storeModel)))
           ->getJsonResource())->setStatusCode(201);
     }
 

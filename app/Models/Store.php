@@ -4,6 +4,7 @@
 
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\BelongsToMany;
   use Illuminate\Database\Eloquent\Relations\HasMany;
 
   class Store extends Model
@@ -29,7 +30,14 @@
       'user_id'
     ];
 
-    public function products(): HasMany{
+    public function products(): HasMany
+    {
       return $this->hasMany(Product::class, 'store_id', 'id');
+    }
+
+    public function carts(): BelongsToMany
+    {
+      return $this->belongsToMany(Cart::class, 'product_carts', 'store_id', 'cart_id')
+        ->using(ProductCart::class);
     }
   }

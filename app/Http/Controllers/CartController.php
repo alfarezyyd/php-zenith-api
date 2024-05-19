@@ -3,12 +3,14 @@
   namespace App\Http\Controllers;
 
   use App\Http\Resources\ProductCartResource;
-  use App\Models\Cart;
+  use App\Http\Resources\ProductResource;
+  use App\Http\Resources\StoreResource;
   use App\Models\Product;
   use App\Models\ProductCart;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Http\Request;
+  use Illuminate\Support\Collection;
   use Illuminate\Support\Facades\Auth;
 
   class CartController extends Controller
@@ -18,9 +20,27 @@
      */
     public function index(): JsonResponse
     {
-      $cartModel = ProductCart::query()->where('cart_id', Auth::user()->cart()->first()->id)->get();
+      $cartModel = ProductCart::query()->with(['product', 'store'])->where('cart_id', Auth::user()->cart()->first()->id)->get();
+      // Buat array kosong untuk menyimpan hasil kelompokkan
+      $groupedProducts = [];
+
+// Lakukan iterasi untuk setiap item pada hasil query
+      foreach ($cartModel as $productCart) {
+        $storeId = $productCart->store->id;
+
+        // Jika belum ada array untuk store ini, buat satu
+        if (!isset($groupedProducts[$storeId])) {
+          $groupedProducts[$storeId] = [
+            'store' => $productCart->store, // Informasi store
+            'products' => [], // Array kosong untuk menyimpan produk
+          ];
+        }
+
+        // Tambahkan produk ke dalam array products di bawah store yang sesuai
+        $groupedProducts[$storeId]['products'][] = $productCart->product;
+      }
       return response()
-        ->json((new WebResponsePayload("Cart retrieve successfully", jsonResource: ProductCartResource::collection($cartModel)))
+        ->json((new WebResponsePayload("Cart retrieve successfully", jsonResource: ProductCartResource::collection($groupedProducts)))
           ->getJsonResource())->setStatusCode(200);
     }
 
@@ -74,7 +94,7 @@
 
     public function attachProductIntoCart(int $productId): JsonResponse
     {
-      $productModel = Product::query()->findOrFail($productId)->get();
+      $productModel = Product::query()->where('id', $productId)->firstOrFail();
       $cartModel = Auth::user()->cart()->first();
       $newProductCart = [
         'product_id' => $productId,
@@ -99,5 +119,34 @@
       return response()
         ->json((new WebResponsePayload("Product detached successfully"))
           ->getJsonResource())->setStatusCode(200);
+    }
+
+    private function groupProductCartsByStore(Collection $productCarts): \Illuminate\Support\Collection
+    {
+      $groupedByStore = collect();
+
+      foreach ($productCarts as $productCart) {
+        $storeId = $productCart->store_id;
+
+        if (!$groupedByStore->has($storeId)) {
+          $groupedByStore->put($storeId, collect());
+        }
+
+        $groupedByStore[$storeId]->push($productCart);
+      }
+
+      return $groupedByStore;
+    }
+
+    private function formatProducts(Collection $productCarts): array
+    {
+      return $productCarts->map(function ($productCart) {
+        return [
+          'id' => $productCart->id,
+          'sub_total_price' => $productCart->sub_total_price,
+          'quantity' => $productCart->quantity,
+          'product' => new ProductResource($productCart->product),  // Menggunakan ProductResource untuk informasi produk
+        ];
+      })->toArray();
     }
   }

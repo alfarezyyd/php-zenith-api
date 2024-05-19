@@ -17,12 +17,8 @@
     public function toArray(Request $request): array
     {
       return [
-        'id' => $this['id'],
-        'sub_total_price' => $this['sub_total_price'],
-        'payload' => [
-          'product' => new ProductResource($this->whenLoaded('product')),
-          'quantity' => $this['quantity'],
-        ]
+        'store' => new StoreResource($this['store']), // Informasi toko
+        'products' => ProductResource::collection($this['products']), // Koleksi produk
       ];
     }
   }
