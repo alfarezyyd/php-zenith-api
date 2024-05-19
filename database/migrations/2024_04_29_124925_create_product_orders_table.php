@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('order_id')->nullable(false);
             $table->unsignedInteger('quantity')->nullable(false);
             $table->unsignedInteger('sub_total_price')->nullable(false);
-            $table->string('note', length: 255)->nullable();
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('order_id')->references('id')->on('orders');
             $table->timestamps();

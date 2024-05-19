@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('product_carts', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('store_id')->nullable(false);
             $table->unsignedBigInteger('product_id')->nullable(false);
             $table->unsignedBigInteger('cart_id')->nullable(false);
             $table->unsignedInteger('sub_total_price')->nullable(false);
             $table->unsignedInteger('quantity')->nullable(false);
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('cart_id')->references('id')->on('carts');
-            $table->unique(['product_id', 'cart_id']);
+            $table->unique(['product_id', 'cart_id', 'store_id']);
             $table->timestamps();
         });
     }

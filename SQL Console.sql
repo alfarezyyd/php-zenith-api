@@ -22,4 +22,6 @@ SELECT * FROM social_accounts;
 SELECT * FROM users;
 SELECT * FROM stores;
 SELECT * FROM categories;
+SELECT * FROM expeditions;
+
 

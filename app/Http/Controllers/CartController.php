@@ -74,10 +74,11 @@
 
     public function attachProductIntoCart(int $productId): JsonResponse
     {
-      $productModel = Product::query()->findOrFail($productId);
+      $productModel = Product::query()->findOrFail($productId)->get();
       $cartModel = Auth::user()->cart()->first();
       $newProductCart = [
         'product_id' => $productId,
+        'store_id' => $productModel['store_id'],
         'cart_id' => $cartModel->id,
         'sub_total_price' => $productModel['price'],
         'quantity' => 1,

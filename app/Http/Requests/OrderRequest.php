@@ -25,10 +25,9 @@
       return [
         "address_id" => ["required"],
         "expedition_id" => ["required", "exists:expeditions,id"],
-        "order_payload" => ["required", "array"],
+        "store_id" => ["required", "numeric", "exists:stores,id"],
         "order_payload.*.product_id" => ["required", "numeric", "exists:products,id"],
         "order_payload.*.quantity" => ["required", "numeric", "min:1"],
-        "order_payload.*.note" => ["nullable", "string", "min:1"]
       ];
     }
   }

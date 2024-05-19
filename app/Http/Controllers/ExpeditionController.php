@@ -38,7 +38,7 @@
      */
     public function index()
     {
-      $expeditionsModel = Expedition::query()->select();
+      $expeditionsModel = Expedition::query()->get();
       return response()
         ->json((new WebResponsePayload("Expedition retrieve successfully", jsonResource: ExpeditionResource::collection($expeditionsModel)))
           ->getJsonResource())->setStatusCode(200);
