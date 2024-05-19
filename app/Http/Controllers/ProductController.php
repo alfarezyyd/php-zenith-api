@@ -9,9 +9,7 @@
   use App\Models\Category;
   use App\Models\Product;
   use App\Models\Store;
-  use App\Models\User;
   use App\Payloads\WebResponsePayload;
-  use App\Repository\Contract\SearchRepository;
   use App\Services\ProductCategoryService;
   use App\Services\ProductResourceService;
   use Illuminate\Http\Exceptions\HttpResponseException;
@@ -19,7 +17,6 @@
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Str;
-  use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
   use Throwable;
 
   class ProductController extends Controller
@@ -32,7 +29,6 @@
      * @param CommonHelper $commonHelper
      * @param ProductResourceService $productResourceService
      * @param ProductCategoryService $productCategoryService
-     * @param SearchRepository $searchRepository
      */
     public function __construct(CommonHelper $commonHelper, ProductResourceService $productResourceService, ProductCategoryService $productCategoryService)
     {
@@ -155,10 +151,7 @@
           ->getJsonResource());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @throws \HttpResponseException
-     */
+
     public function destroy(string $storeSlug, int $productId): JsonResponse
     {
       $storeModel = Store::query()->with('products')->where('slug', $storeSlug)->where('user_id', Auth::id())->firstOrFail();
