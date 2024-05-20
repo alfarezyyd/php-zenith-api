@@ -29,7 +29,7 @@
       Route::get('/sync', [ExpeditionProvinceController::class, 'syncThirdPartyProvince']);
     });
 
-      Route::prefix('expedition-provinces')->group(function () {
+      Route::prefix('expedition-city')->group(function () {
       Route::get('', [ExpeditionProvinceController::class, 'index']);
       Route::get('/sync', [ExpeditionProvinceController::class, 'syncThirdPartyCity']);
     });

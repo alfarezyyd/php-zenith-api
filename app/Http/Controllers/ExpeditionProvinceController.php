@@ -26,8 +26,9 @@
     public function index(): JsonResponse
     {
       $expeditionProvinceModels = ExpeditionProvince::query()->with('expeditionCities')->get();
+
       return response()->json(
-        (new WebResponsePayload("Expedition province retrieved succesfully", ExpeditionProvinceResource::collection($expeditionProvinceModels)))
+        (new WebResponsePayload("Expedition province retrieved succesfully", jsonResource:  ExpeditionProvinceResource::collection($expeditionProvinceModels)))
           ->getJsonResource())
         ->setStatusCode(200);
     }

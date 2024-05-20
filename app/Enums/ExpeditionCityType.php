@@ -4,6 +4,6 @@
 
   enum ExpeditionCityType: string
   {
-    case KOTA = 'Kota';
-    case KABUPATEN = 'Kabupaten';
+    case KOTA = 'KOTA';
+    case KABUPATEN = 'KABUPATEN';
   }

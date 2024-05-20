@@ -2,6 +2,7 @@
 
   namespace App\Http\Resources;
 
+  use App\Models\ExpeditionCity;
   use Illuminate\Http\Request;
   use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,7 +18,7 @@
       return [
         'id' => $this['id'],
         'name' => $this['name'],
-        'expedition_cities' => $this->whenLoaded('expeditionCities'),
+        'expedition_cities' => ExpeditionCityResource::collection(($this->whenLoaded('expeditionCities'))),
       ];
     }
   }

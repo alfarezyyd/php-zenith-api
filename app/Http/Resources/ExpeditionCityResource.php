@@ -2,6 +2,7 @@
 
   namespace App\Http\Resources;
 
+  use App\Models\ExpeditionProvince;
   use Illuminate\Http\Request;
   use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +20,6 @@
         'type' => $this['type'],
         'name' => $this['name'],
         'postal_code' => $this['postal_code'],
-        'expedition_province' => $this->whenLoaded('expeditionProvince'),
       ];
     }
   }

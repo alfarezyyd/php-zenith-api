@@ -24,3 +24,5 @@ SELECT * FROM categories;
 SELECT * FROM expeditions;
 SELECT * FROM products;
 SELECT * FROM product_orders;
+SELECT * FROM expedition_cities;
+SELECT * FROM expedition_provinces;

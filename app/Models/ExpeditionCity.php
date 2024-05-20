@@ -17,7 +17,7 @@
     public $incrementing = true;
     public $timestamps = true;
     protected $casts = [
-      'expedition_province_id' => ExpeditionCityType::class
+      'type' => ExpeditionCityType::class
     ];
 
     protected $fillable = [
