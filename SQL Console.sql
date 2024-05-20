@@ -23,3 +23,4 @@ SELECT * FROM stores;
 SELECT * FROM categories;
 SELECT * FROM expeditions;
 SELECT * FROM products;
+SELECT * FROM product_orders;

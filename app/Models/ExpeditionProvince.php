@@ -4,6 +4,7 @@
 
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\HasMany;
 
   class ExpeditionProvince extends Model
   {
@@ -20,4 +21,14 @@
       'created_at',
       'updated_at'
     ];
+
+    public function addresses(): HasMany
+    {
+      return $this->hasMany(Address::class, 'address_id', 'id');
+    }
+
+    public function expeditionCity(): HasMany
+    {
+      return $this->hasMany(ExpeditionCity::class, 'expedition_province_id', 'id');
+    }
   }

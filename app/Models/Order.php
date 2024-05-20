@@ -4,6 +4,7 @@
 
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
   class Order extends Model
   {
@@ -22,4 +23,20 @@
       'user_id',
       'expedition_id'
     ];
+
+    public function user(): BelongsTo
+    {
+      return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function expedition(): BelongsTo
+    {
+      return $this->belongsTo(Expedition::class, 'expedition_id', 'id');
+    }
+
+    public function address(): BelongsTo
+    {
+      return $this->belongsTo(Address::class, 'address_id', 'id');
+    }
+
   }

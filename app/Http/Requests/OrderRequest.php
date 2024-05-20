@@ -28,6 +28,7 @@
         "store_id" => ["required", "numeric", "exists:stores,id"],
         "order_payload.*.product_id" => ["required", "numeric", "exists:products,id"],
         "order_payload.*.quantity" => ["required", "numeric", "min:1"],
+        "gross_amount" => ["required", "numeric", "gt:0"],
       ];
     }
   }

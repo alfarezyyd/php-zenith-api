@@ -66,6 +66,12 @@
       return $this->hasOne(UserProfile::class, 'user_id', 'id');
     }
 
+    public function Orders(): HasMany
+    {
+      return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+
     public function deleteToken()
     {
       return DB::transaction(function () {

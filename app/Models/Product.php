@@ -59,4 +59,10 @@
       return $this->belongsToMany(Cart::class, 'product_carts', 'product_id', 'cart_id')
         ->using(ProductCart::class);
     }
+
+    public function orders(): BelongsToMany
+    {
+      return $this->belongsToMany(Order::class, 'product_orders', 'product_id', 'order_id')
+        ->using(ProductOrder::class);
+    }
   }

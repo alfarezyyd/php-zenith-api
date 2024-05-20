@@ -4,6 +4,7 @@
 
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
   class Address extends Model
   {
@@ -30,4 +31,16 @@
       'telephone',
       'user_id'
     ];
+
+    public function user(): BelongsTo{
+      return $this->belongsTo(User::class, 'address_id','id');
+    }
+
+    public function expeditionProvince(): BelongsTo{
+      return $this->belongsTo(ExpeditionProvince::class, 'expedition_province_id','id');
+    }
+
+    public function expeditionCity(): BelongsTo{
+      return $this->belongsTo(ExpeditionCity::class, 'expedition_city_id','id');
+    }
   }

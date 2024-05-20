@@ -44,7 +44,7 @@
     public function index(): JsonResponse
     {
 
-      $productModel = Product::query()->with(['categories', 'store'])->get();
+      $productModel = Product::query()->with('store')->get();
       return response()
         ->json((new WebResponsePayload("Product retrieve successfully", jsonResource: ProductResource::collection($productModel)))
           ->getJsonResource())->setStatusCode(200);

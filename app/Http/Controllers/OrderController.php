@@ -1,21 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+  namespace App\Http\Controllers;
 
-use App\Http\Requests\OrderRequest;
-use App\Models\Address;
-use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+  use App\Http\Requests\OrderRequest;
+  use App\Models\Address;
+  use App\Models\Order;
+  use Illuminate\Http\Request;
+  use Illuminate\Support\Facades\Auth;
+  use Illuminate\Support\Str;
+  use Midtrans\Config;
 
-class OrderController extends Controller
-{
+  class OrderController extends Controller
+  {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+      //
     }
 
     /**
@@ -23,7 +25,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+      //
     }
 
     /**
@@ -31,9 +33,31 @@ class OrderController extends Controller
      */
     public function store(OrderRequest $orderRequest)
     {
-      $validatedOrderRequest = $orderRequest->validated();
-      $addressModel = Address::query()->findOrFail($validatedOrderRequest['address_id'])->where('user_id', Auth::id());
-      $order = new Order();
+      Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+      Config::$isProduction = env('MIDTRANS_IS_PRODUCTION');
+      Config::$isSanitized = env('MIDTRANS_IS_SANITIZED');
+      Config::$is3ds = env('MIDTRANS_IS_3DS');
+
+      $validatedPaymentRequest = $orderRequest->validated();
+      $productIds = $validatedPaymentRequest['order_payload']['product_id'];
+      $paymentPayload = [
+        'transaction_details' => [
+          'order_id' => Str::uuid()->toString(),
+          'gross_amount' => $validatedPaymentRequest['gross_amount']
+        ],
+        'customer_details' => [
+          'first_name' => Auth::user()->profile['first_name'],
+          'last_name' => Auth::user()->profile['last_name'],
+          'email' => Auth::user()->profile['email'],
+          'phone' => Auth::user()->profile['phone']
+        ]
+      ];
+      $responsePayload['token'] = Snap::getSnapToken($paymentPayload);
+      return response()->json(
+        (new WebResponsePayload(responseMessage: "Midtrans token retrieve succesfully", jsonResource: new MidtransResponse($responsePayload)))
+          ->getJsonResource()
+      )->setStatusCode(200);
+
     }
 
     /**
@@ -41,7 +65,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+      //
     }
 
     /**
@@ -49,7 +73,7 @@ class OrderController extends Controller
      */
     public function edit(string $id)
     {
-        //
+      //
     }
 
     /**
@@ -57,7 +81,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+      //
     }
 
     /**
@@ -65,6 +89,6 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+      //
     }
-}
+  }

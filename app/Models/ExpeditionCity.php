@@ -5,6 +5,7 @@
   use App\Enums\ExpeditionCityType;
   use Illuminate\Database\Eloquent\Factories\HasFactory;
   use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
   class ExpeditionCity extends Model
   {
@@ -26,4 +27,8 @@
       'postal_code',
       'expedition_province_id'
     ];
+
+    public function expeditionProvince(): BelongsTo{
+      return $this->belongsTo(ExpeditionProvince::class, 'expedition_province_id', 'id');
+    }
   }
