@@ -18,7 +18,6 @@
     protected $fillable = [
       'total_price',
       'status',
-      'order_payment_method',
       'address_id',
       'user_id',
       'expedition_id'

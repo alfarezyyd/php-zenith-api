@@ -2,11 +2,17 @@
 
   namespace App\Http\Controllers;
 
+  use App\Enums\OrderStatus;
   use App\Http\Requests\OrderRequest;
   use App\Models\Address;
   use App\Models\Order;
+  use App\Models\ProductOrder;
+  use App\Payloads\WebResponsePayload;
+  use Carbon\Carbon;
+  use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
+  use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Str;
   use Midtrans\Config;
 
@@ -39,7 +45,35 @@
       Config::$is3ds = env('MIDTRANS_IS_3DS');
 
       $validatedPaymentRequest = $orderRequest->validated();
-      $productIds = $validatedPaymentRequest['order_payload']['product_id'];
+      try {
+        DB::beginTransaction();
+
+        $newOrderModel = new Order([
+          'total_price' => $validatedPaymentRequest['gross_amount'],
+          'status' => OrderStatus::NEW,
+          'address_id' => $validatedPaymentRequest['address_id'],
+          'user_id' => Auth::id(),
+          'expedition_id' => $validatedPaymentRequest['expedition_id']
+        ]);
+        $newOrderModel->save();
+        $productsOrders = [];
+        foreach ($validatedPaymentRequest['order_payload'] as $product) {
+          $productOrder['product_id'] = $product['id'];
+          $productOrder['quantity'] = $product['quantity'];
+          $productOrder['order_id'] = $newOrderModel->id;
+          $productOrder['sub_total_price'] = $product['price'] * $product['quantity'];
+          $productOrder['created_at'] = $newOrderModel->freshTimestampString();
+          $productOrders[] = $productOrder;
+        }
+        ProductOrder::query()->insert($productOrders);
+        DB::commit();
+      } catch (\Exception $e) {
+        DB::rollBack();
+        throw new HttpResponseException(response()->json(
+          (new WebResponsePayload("Something went wrong when trying to make order.", 500))->getJsonResource(),
+        ));
+      }
+      dd("commited");
       $paymentPayload = [
         'transaction_details' => [
           'order_id' => Str::uuid()->toString(),

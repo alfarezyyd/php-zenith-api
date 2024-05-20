@@ -87,7 +87,7 @@
     });
 
     Route::prefix('checkout')->group(function () {
-      Route::post('', [MidtransController::class, 'initPayment']);
+      Route::post('', [OrderController::class, 'store']);
     });
   });
 

@@ -21,7 +21,7 @@
       'order_id',
       'quantity',
       'sub_total_price',
-      'create_at',
+      'created_at',
       'updated_at'
     ];
 
