@@ -73,7 +73,7 @@
           (new WebResponsePayload("Something went wrong when trying to make order.", 500))->getJsonResource(),
         ));
       }
-      dd("commited");
+
       $paymentPayload = [
         'transaction_details' => [
           'order_id' => Str::uuid()->toString(),
