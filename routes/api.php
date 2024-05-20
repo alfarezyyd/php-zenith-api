@@ -4,7 +4,7 @@
   use App\Http\Controllers\CartController;
   use App\Http\Controllers\CategoryController;
   use App\Http\Controllers\ExpeditionController;
-  use App\Http\Controllers\MidtransController;
+  use App\Http\Controllers\ExpeditionProvinceController;
   use App\Http\Controllers\OrderController;
   use App\Http\Controllers\ProductController;
   use App\Http\Controllers\StoreController;
@@ -19,8 +19,19 @@
       Route::post('', [ExpeditionController::class, 'store']);
       Route::put('/{expeditionId}', [ExpeditionController::class, 'update']);
       Route::delete('/{expeditionId}', [ExpeditionController::class, 'destroy']);
-      Route::get('/sync-province', [ExpeditionController::class, 'syncThirdPartyProvince']);
       Route::get('/sync-city', [ExpeditionController::class, 'syncThirdPartyCity']);
+      Route::get('/get-province', [ExpeditionController::class, 'syncThirdPartyCity']);
+      Route::get('/get-city', [ExpeditionController::class, 'syncThirdPartyCity']);
+    });
+
+    Route::prefix('expedition-provinces')->group(function () {
+      Route::get('', [ExpeditionProvinceController::class, 'index']);
+      Route::get('/sync', [ExpeditionProvinceController::class, 'syncThirdPartyProvince']);
+    });
+
+      Route::prefix('expedition-provinces')->group(function () {
+      Route::get('', [ExpeditionProvinceController::class, 'index']);
+      Route::get('/sync', [ExpeditionProvinceController::class, 'syncThirdPartyCity']);
     });
 
     Route::prefix('categories')->group(function () {

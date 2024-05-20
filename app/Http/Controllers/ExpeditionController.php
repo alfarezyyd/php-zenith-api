@@ -21,8 +21,8 @@
     private CommonHelper $commonHelper;
 
     /**
-     * @param ExpeditionProvince $expeditionProvince
-     * @param ExpeditionCity $expeditionCity
+     * @param ExpeditionProvinceController $expeditionProvince
+     * @param ExpeditionCityController $expeditionCity
      * @param CommonHelper $commonHelper
      */
     public function __construct(ExpeditionProvince $expeditionProvince, ExpeditionCity $expeditionCity, CommonHelper $commonHelper)
@@ -106,64 +106,5 @@
       return response()
         ->json((new WebResponsePayload("Expedition deleted successfully"))
           ->getJsonResource());
-    }
-
-    /**
-     * Call RAJAONGKIR API for expedition city integration
-     *
-     * @throws HttpResponseException
-     */
-    public function syncThirdPartyProvince(): void
-    {
-      try {
-        $responseThirdParty = Http::withHeaders([
-          'Accept' => 'application/json',
-          'key' => env("RAJAONGKIR_API_KEY")
-        ])->get("https://api.rajaongkir.com/starter/province");
-        if (!$responseThirdParty->successful()) {
-          throw new ConnectionException();
-        }
-        $responseJson = $responseThirdParty->json();
-        $transformedResponseJson = array_map(function ($value) {
-          return [
-            'id' => $value['province_id'],
-            'name' => $value['province'],
-            'created_at' => $this->expeditionProvince->freshTimestamp(),
-          ];
-        }, $responseJson['rajaongkir']['results']);
-        ExpeditionProvince::query()->insert($transformedResponseJson);
-      } catch (ConnectionException) {
-        throw new HttpResponseException(response()->json('Error when trying to connect to third party!', 500));
-      }
-    }
-
-    /**
-     * @throws HttpResponseException
-     */
-    public function syncThirdPartyCity(): void
-    {
-      try {
-        $responseThirdParty = Http::withHeaders([
-          'Accept' => 'application/json',
-          'key' => env("RAJAONGKIR_API_KEY")
-        ])->get("https://api.rajaongkir.com/starter/city");
-        if (!$responseThirdParty->successful()) {
-          throw new ConnectionException();
-        }
-        $responseJson = $responseThirdParty->json();
-        $transformedResponseJson = array_map(function ($value) {
-          return [
-            'id' => $value['city_id'],
-            'expedition_province_id' => $value['province_id'],
-            'type' => $value['type'],
-            'name' => $value['city_name'],
-            'postal_code' => $value['postal_code'],
-            'created_at' => $this->expeditionCity->freshTimestamp(),
-          ];
-        }, $responseJson['rajaongkir']['results']);
-        ExpeditionCity::query()->insert($transformedResponseJson);
-      } catch (ConnectionException) {
-        throw new HttpResponseException(response()->json('Error when trying to connect to third party!', 500));
-      }
     }
   }

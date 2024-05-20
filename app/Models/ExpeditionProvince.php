@@ -27,7 +27,7 @@
       return $this->hasMany(Address::class, 'address_id', 'id');
     }
 
-    public function expeditionCity(): HasMany
+    public function expeditionCities(): HasMany
     {
       return $this->hasMany(ExpeditionCity::class, 'expedition_province_id', 'id');
     }

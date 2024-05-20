@@ -14,7 +14,7 @@
   class AddressController extends Controller
   {
     /**
-     * @param ExpeditionProvince $expeditionProvince
+     * @param ExpeditionProvinceController $expeditionProvince
      */
     private CommonHelper $commonHelper;
 
