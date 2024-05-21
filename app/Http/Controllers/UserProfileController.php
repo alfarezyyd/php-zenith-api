@@ -5,6 +5,8 @@
   use App\Helpers\CommonHelper;
   use App\Http\Requests\UserProfileCreateRequest;
   use App\Http\Requests\UserProfileUpdateRequest;
+  use App\Http\Resources\UserProfileResource;
+  use App\Models\User;
   use App\Models\UserProfile;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Http\Exceptions\HttpResponseException;
@@ -102,6 +104,14 @@
       $this->commonHelper->validateOperationState($deleteState);
       return response()->json(
         new WebResponsePayload("User profile successfully deleted"),
+      )->setStatusCode(200);
+    }
+
+    public function userInfo(){
+      $userId = Auth::id();
+      $userModel = User::query()->with(['profile'])->where('id', $userId)->firstOrFail();
+        return response()->json(
+          (new WebResponsePayload("User profile get", jsonResource:  new UserProfileResource($userModel->profile)))->getJsonResource(),
       )->setStatusCode(200);
     }
   }

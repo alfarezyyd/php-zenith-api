@@ -30,7 +30,7 @@
       Route::get('/sync', [ExpeditionProvinceController::class, 'syncThirdPartyProvince']);
     });
 
-      Route::prefix('expedition-cities')->group(function () {
+    Route::prefix('expedition-cities')->group(function () {
       Route::get('', [ExpeditionCityController::class, 'index']);
       Route::get('/sync', [ExpeditionCityController::class, 'syncThirdPartyCity']);
     });
@@ -101,6 +101,7 @@
       Route::post('', [UserProfileController::class, 'store']);
       Route::put('/{userProfileId}', [UserProfileController::class, 'update']);
       Route::delete('/{userProfileId}', [UserProfileController::class, 'destroy']);
+      Route::get('/info', [UserProfileController::class, 'userInfo']);
     });
 
     Route::prefix('checkout')->group(function () {
