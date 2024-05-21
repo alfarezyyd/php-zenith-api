@@ -16,7 +16,8 @@
     public function toArray(Request $request): array
     {
       return [
-        'name' => Str::upper($this->name)
+        'id' => $this['id'],
+        'name' => Str::upper($this['name'])
       ];
     }
   }

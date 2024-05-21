@@ -11,15 +11,17 @@
     public function up(): void
     {
       Schema::create('orders', function (Blueprint $table) {
-        $table->id();
+        $table->uuid('id')->primary();
         $table->unsignedMediumInteger('total_price')->nullable(false);
         $table->enum('status', ['NEW', 'PROCESSED', 'CONFIRMED', 'SENT', 'FINISHED', 'CANCELLED']);
         $table->unsignedBigInteger('address_id')->nullable(false);
         $table->unsignedBigInteger('user_id')->nullable(false);
         $table->unsignedSmallInteger('expedition_id')->nullable(false);
+        $table->unsignedBigInteger('store_id')->nullable(false);
         $table->foreign('expedition_id')->references('id')->on('expeditions');
         $table->foreign('address_id')->references('id')->on('addresses');
         $table->foreign('user_id')->references('id')->on('users');
+        $table->string('midtrans_token')->nullable();
         $table->timestamps();
       });
     }

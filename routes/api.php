@@ -3,6 +3,7 @@
   use App\Http\Controllers\AddressController;
   use App\Http\Controllers\CartController;
   use App\Http\Controllers\CategoryController;
+  use App\Http\Controllers\ExpeditionCityController;
   use App\Http\Controllers\ExpeditionController;
   use App\Http\Controllers\ExpeditionProvinceController;
   use App\Http\Controllers\OrderController;
@@ -29,9 +30,9 @@
       Route::get('/sync', [ExpeditionProvinceController::class, 'syncThirdPartyProvince']);
     });
 
-      Route::prefix('expedition-city')->group(function () {
-      Route::get('', [ExpeditionProvinceController::class, 'index']);
-      Route::get('/sync', [ExpeditionProvinceController::class, 'syncThirdPartyCity']);
+      Route::prefix('expedition-cities')->group(function () {
+      Route::get('', [ExpeditionCityController::class, 'index']);
+      Route::get('/sync', [ExpeditionCityController::class, 'syncThirdPartyCity']);
     });
 
     Route::prefix('categories')->group(function () {
@@ -87,6 +88,7 @@
 
     Route::prefix('orders')->group(function () {
       Route::get('', [OrderController::class, 'index']);
+      Route::get('/{storeId}', [OrderController::class, 'indexByStore']);
     });
 
     Route::prefix('user-profiles')->group(function () {
