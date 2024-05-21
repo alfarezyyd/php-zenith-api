@@ -4,14 +4,18 @@
 
   use App\Enums\OrderStatus;
   use App\Http\Requests\OrderRequest;
+  use App\Http\Requests\OrderSentRequest;
   use App\Http\Resources\MidtransResponse;
   use App\Http\Resources\OrderResource;
+  use App\Http\Resources\StoreOrderResource;
+  use App\Http\Resources\UserOrderResource;
   use App\Models\Address;
   use App\Models\Order;
   use App\Models\ProductOrder;
   use App\Payloads\WebResponsePayload;
   use Carbon\Carbon;
   use Illuminate\Http\Exceptions\HttpResponseException;
+  use Illuminate\Http\JsonResponse;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
@@ -41,7 +45,17 @@
     {
       $storeOrders = Order::query()->with(['user', 'expedition', 'address'])->where('store_id', $storeId)->get();
       return response()->json(
-        (new WebResponsePayload('Order indexed by store succesfully', jsonResource: OrderResource::collection($storeOrders)))
+        (new WebResponsePayload('Order indexed by store succesfully', jsonResource: StoreOrderResource::collection($storeOrders)))
+          ->getJsonResource())->setStatusCode(200);
+    }
+
+    public function indexByUser()
+    {
+      $userModel = Auth::user();
+      $userOrders = $userModel->orders;
+      $userOrders->load(['expedition', 'address']);
+      return response()->json(
+        (new WebResponsePayload('Order indexed by user succesfully', jsonResource: UserOrderResource::collection($userOrders)))
           ->getJsonResource())->setStatusCode(200);
     }
 
@@ -90,35 +104,41 @@
             'last_name' => Auth::user()->profile['last_name'],
             'email' => Auth::user()->profile['email'],
             'phone' => Auth::user()->profile['phone']
+          ],
+          'callbacks' => [
+            "finish" => "http://localhost:3000/thanks"
           ]
         ];
         $responsePayload['token'] = Snap::getSnapToken($paymentPayload);
         Order::query()->where('id', $orderId)->update([
           'midtrans_token' => $responsePayload['token']
         ]);
+
         DB::commit();
+        return response()->json(
+          (new WebResponsePayload(responseMessage: $responsePayload['token'], jsonResource: new MidtransResponse($responsePayload)))
+            ->getJsonResource()
+        )->setStatusCode(200);
       } catch (\Exception $e) {
         DB::rollBack();
         throw new HttpResponseException(response()->json(
-          (new WebResponsePayload("Something went wrong when trying to make order.", 500))->getJsonResource(),
+          (new WebResponsePayload("Something went wrong when trying to make order.", $e->getMessage()))->getJsonResource(),
         ));
       }
 
-      /** TODO: TOKEN DISIMPEN DI DB */
-      return response()->json(
-        (new WebResponsePayload(responseMessage: "Midtrans token retrieve succesfully", jsonResource: new MidtransResponse($responsePayload)))
-          ->getJsonResource()
-      )->setStatusCode(200);
 
     }
 
     /**
      * Display the specified resource.
      */
-    public
-    function show(string $id)
+    public function show(string $orderId): JsonResponse
     {
-      //
+      $orderModel = Order::query()->with(['expedition', 'address', 'user'])->where('id', $orderId)->first();
+      return response()->json(
+        (new WebResponsePayload('Order retrieved succesfully', jsonResource: new OrderResource($orderModel)))
+        ->getJsonResource()
+      );
     }
 
     /**
@@ -142,9 +162,30 @@
     /**
      * Remove the specified resource from storage.
      */
-    public
-    function destroy(string $id)
+    public function destroy(string $id)
     {
       //
+    }
+
+    public function updateReceiptNumber(OrderSentRequest $orderSentRequest)
+    {
+      $validatedOrderSentRequest = $orderSentRequest->validated();
+      Order::query()->where('id', $validatedOrderSentRequest['order_id'])->update([
+        'status' => OrderStatus::SENT,
+        'receipt_number' => $validatedOrderSentRequest['receipt_number']
+      ]);
+      return response()->json(
+        (new WebResponsePayload('Order successfully sent'))->getJsonResource()
+      )->setStatusCode(200);
+    }
+
+    public function confirmOrderCompleted(string $orderId): JsonResponse
+    {
+      Order::query()->where('id', $orderId)->update([
+        'status' => OrderStatus::FINISHED
+      ]);
+      return response()->json(
+        (new WebResponsePayload('Order updated to complete'))->getJsonResource()
+      )->setStatusCode(200);
     }
   }

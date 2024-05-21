@@ -14,7 +14,7 @@
 
     protected $table = 'orders';
     protected $primaryKey = 'id';
-    protected $keyType = 'int';
+    protected $keyType = 'string';
     public $incrementing = true;
     public $timestamps = true;
     protected $fillable = [

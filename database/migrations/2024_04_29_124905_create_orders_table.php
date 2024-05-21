@@ -18,10 +18,12 @@
         $table->unsignedBigInteger('user_id')->nullable(false);
         $table->unsignedSmallInteger('expedition_id')->nullable(false);
         $table->unsignedBigInteger('store_id')->nullable(false);
+         $table->string('midtrans_token')->nullable();
+        $table->string('receipt_number')->nullable();
         $table->foreign('expedition_id')->references('id')->on('expeditions');
         $table->foreign('address_id')->references('id')->on('addresses');
         $table->foreign('user_id')->references('id')->on('users');
-        $table->string('midtrans_token')->nullable();
+
         $table->timestamps();
       });
     }

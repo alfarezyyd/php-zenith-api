@@ -66,9 +66,9 @@
       return $this->hasOne(UserProfile::class, 'user_id', 'id');
     }
 
-    public function Orders(): HasMany
+    public function orders(): HasMany
     {
-      return $this->hasMany(Order::class, 'user_id', 'id');
+      return $this->hasMany(Order::class, 'user_id', 'id')->orderBy('created_at', 'desc');
     }
 
 

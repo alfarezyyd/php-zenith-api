@@ -88,7 +88,11 @@
 
     Route::prefix('orders')->group(function () {
       Route::get('', [OrderController::class, 'index']);
+      Route::get('find/{orderId}', [OrderController::class, 'show']);
+      Route::get('/user', [OrderController::class, 'indexByUser']);
       Route::get('/{storeId}', [OrderController::class, 'indexByStore']);
+      Route::post('/sent', [OrderController::class, 'updateReceiptNumber']);
+      Route::get('/complete/{orderId}', [OrderController::class, 'confirmOrderCompleted']);
     });
 
     Route::prefix('user-profiles')->group(function () {
@@ -102,6 +106,7 @@
     Route::prefix('checkout')->group(function () {
       Route::post('', [OrderController::class, 'store']);
     });
+
   });
 
 

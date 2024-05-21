@@ -7,6 +7,7 @@
   use App\Http\Resources\StoreResource;
   use App\Models\Store;
   use App\Payloads\WebResponsePayload;
+  use HttpResponseException;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
@@ -43,7 +44,6 @@
 
     /**
      * Store a newly created resource in storage.
-     * @throws HttpResponseException
      */
     public function store(StoreSaveRequest $storeSaveRequest): JsonResponse
     {

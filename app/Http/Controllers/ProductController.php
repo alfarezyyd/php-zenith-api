@@ -107,7 +107,6 @@
             ->getJsonResource())->setStatusCode(201);
       } catch (Throwable $throwable) {
         DB::rollBack();
-        print($throwable->getMessage());
         throw new HttpResponseException(response()->json(
           (new WebResponsePayload("Internal server error",))
             ->getJsonResource())->setStatusCode(500)
