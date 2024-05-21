@@ -18,6 +18,7 @@
   use Illuminate\Support\Facades\DB;
   use Illuminate\Support\Str;
   use Throwable;
+  use function Ramsey\Uuid\v1;
 
   class ProductController extends Controller
   {

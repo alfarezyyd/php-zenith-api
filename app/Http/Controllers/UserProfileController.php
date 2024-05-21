@@ -10,6 +10,7 @@
   use App\Models\UserProfile;
   use App\Payloads\WebResponsePayload;
   use Illuminate\Http\Exceptions\HttpResponseException;
+  use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
 
@@ -107,7 +108,8 @@
       )->setStatusCode(200);
     }
 
-    public function userInfo(){
+    public function userInfo(): JsonResponse
+    {
       $userId = Auth::id();
       $userModel = User::query()->with(['profile'])->where('id', $userId)->firstOrFail();
         return response()->json(
