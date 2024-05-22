@@ -1,6 +1,7 @@
 <?php
 
   use App\Http\Controllers\AddressController;
+  use App\Http\Controllers\Auth\SocialiteController;
   use App\Http\Controllers\CartController;
   use App\Http\Controllers\CategoryController;
   use App\Http\Controllers\ExpeditionCityController;
@@ -109,7 +110,7 @@
     Route::prefix('checkout')->group(function () {
       Route::post('', [OrderController::class, 'store']);
     });
-
+    Route::post('/logout', [SocialiteController::class, 'logoutHandler']);
   });
 
 

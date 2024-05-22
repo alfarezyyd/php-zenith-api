@@ -103,5 +103,16 @@
     public function logoutHandler(Request $request)
     {
 
+      // Revoke all tokens...
+      Auth::user()->tokens()->delete();
+
+// Revoke the token that was used to authenticate the current request...
+      $request->user()->currentAccessToken()->delete();
+
+// Revoke a specific token...
+      Auth::user()->tokens()->where('id', 'login_token')->delete();
+      return response()->json(
+        (new WebResponsePayload('Logged out successfully.'))->getJsonResource()
+      )->setStatusCode(200);
     }
   }
