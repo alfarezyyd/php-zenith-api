@@ -188,4 +188,14 @@
         (new WebResponsePayload('Order updated to complete'))->getJsonResource()
       )->setStatusCode(200);
     }
+
+       public function updateRejectOrder(string $orderId): JsonResponse
+    {
+      Order::query()->where('id', $orderId)->update([
+        'status' => OrderStatus::CANCELLED
+      ]);
+      return response()->json(
+        (new WebResponsePayload('Order updated to reject'))->getJsonResource()
+      )->setStatusCode(200);
+    }
   }

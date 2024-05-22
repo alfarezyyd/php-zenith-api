@@ -84,9 +84,11 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserProfileUpdateRequest $userProfileUpdateRequest, int $userProfileId)
+    public function update(UserProfileUpdateRequest $userProfileUpdateRequest)
     {
-      $userProfileModel = UserProfile::query()->firstOrFail($userProfileId);
+
+      $userModel = Auth::user();
+      $userProfileModel = $userModel->profile;
       $validatedUserProfileUpdateRequest = $userProfileUpdateRequest->validated();
       $userProfileModel->fill($validatedUserProfileUpdateRequest);
       $userProfileModel->save();

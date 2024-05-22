@@ -62,6 +62,7 @@
     Route::prefix('carts')->group(function () {
       Route::get('', [CartController::class, 'index']);
       Route::post('/{productId}', [CartController::class, 'attachProductIntoCart']);
+      Route::delete('/delete/{productId}', [CartController::class, 'detachProductFromCart']);
       Route::put('/{cartId}', [CartController::class, 'update']);
       Route::delete('/{cartId}', [CartController::class, 'destroy']);
     });
@@ -93,13 +94,14 @@
       Route::get('/{storeId}', [OrderController::class, 'indexByStore']);
       Route::post('/sent', [OrderController::class, 'updateReceiptNumber']);
       Route::get('/complete/{orderId}', [OrderController::class, 'confirmOrderCompleted']);
+      Route::get('/reject/{orderId}', [OrderController::class, 'updateRejectOrder']);
     });
 
     Route::prefix('user-profiles')->group(function () {
       Route::get('', [UserProfileController::class, 'index']);
       Route::get('', [UserProfileController::class, 'show']);
       Route::post('', [UserProfileController::class, 'store']);
-      Route::put('/{userProfileId}', [UserProfileController::class, 'update']);
+      Route::put('', [UserProfileController::class, 'update']);
       Route::delete('/{userProfileId}', [UserProfileController::class, 'destroy']);
       Route::get('/info', [UserProfileController::class, 'userInfo']);
     });

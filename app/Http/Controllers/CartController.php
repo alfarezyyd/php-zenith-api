@@ -113,12 +113,24 @@
 
     public function detachProductFromCart(int $productId): JsonResponse
     {
+      // Cari product berdasarkan ID, jika tidak ditemukan akan mengembalikan 404
       $productModel = Product::query()->findOrFail($productId);
-      $cartModel = Auth::user()->cart();
-      $cartModel->products()->detach($productModel);
-      return response()
-        ->json((new WebResponsePayload("Product detached successfully"))
-          ->getJsonResource())->setStatusCode(200);
+
+      // Ambil model Cart milik user yang sedang login
+      $cartModel = Auth::user()->cart;
+
+      if ($cartModel) {
+        // Detach product dari relasi products pada model Cart
+        $cartModel->products()->detach($productModel->id);
+
+        return response()
+          ->json((new WebResponsePayload("Product detached successfully"))
+            ->getJsonResource())->setStatusCode(200);
+      } else {
+        return response()
+          ->json((new WebResponsePayload("Cart not found"))
+            ->getJsonResource())->setStatusCode(404);
+      }
     }
 
     private function groupProductCartsByStore(Collection $productCarts): \Illuminate\Support\Collection
