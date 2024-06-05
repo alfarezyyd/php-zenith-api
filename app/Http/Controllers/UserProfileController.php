@@ -113,9 +113,9 @@
     public function userInfo(): JsonResponse
     {
       $userId = Auth::id();
-      $userModel = User::query()->with(['profile'])->where('id', $userId)->firstOrFail();
-        return response()->json(
-          (new WebResponsePayload("User profile get", jsonResource:  new UserProfileResource($userModel->profile)))->getJsonResource(),
+      $userModel = User::query()->where('id', $userId)->with(['profile'])->firstOrFail();
+      return response()->json(
+        (new WebResponsePayload("User profile get", jsonResource: new UserProfileResource($userModel->profile)))->getJsonResource(),
       )->setStatusCode(200);
     }
   }

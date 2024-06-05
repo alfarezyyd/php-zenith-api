@@ -7,7 +7,6 @@
   use App\Http\Resources\StoreResource;
   use App\Models\Store;
   use App\Payloads\WebResponsePayload;
-  use HttpResponseException;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
@@ -93,11 +92,11 @@
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreSaveRequest $storeSaveRequest, int $storeId): JsonResponse
+    public function update(StoreSaveRequest $storeSaveRequest, string $storeSlug): JsonResponse
     {
       $validatedAddressCreateRequest = $storeSaveRequest->validated();
       $loggedUserId = Auth::id();
-      $storeModel = Store::query()->findOrFail($storeId)->where('user_id', $loggedUserId);
+      $storeModel = Store::query()->findOrFail($storeSlug)->where('user_id', $loggedUserId);
       $storeModel->fill($validatedAddressCreateRequest)->save();
       return response()
         ->json((new WebResponsePayload("Store updated successfully"))

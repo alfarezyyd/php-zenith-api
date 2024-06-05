@@ -56,7 +56,7 @@
       Route::get('find', [StoreController::class, 'findByUser']);
       Route::get('/{storeSlug}', [StoreController::class, 'show']);
       Route::post('', [StoreController::class, 'store']);
-      Route::put('/{storeId}', [StoreController::class, 'update']);
+      Route::put('/{storeSlug}', [StoreController::class, 'update']);
       Route::delete('/{storeId}', [StoreController::class, 'destroy']);
     });
 
@@ -100,7 +100,6 @@
 
     Route::prefix('user-profiles')->group(function () {
       Route::get('', [UserProfileController::class, 'index']);
-      Route::get('', [UserProfileController::class, 'show']);
       Route::post('', [UserProfileController::class, 'store']);
       Route::put('', [UserProfileController::class, 'update']);
       Route::delete('/{userProfileId}', [UserProfileController::class, 'destroy']);

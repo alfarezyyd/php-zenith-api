@@ -9,16 +9,16 @@
   use App\Http\Resources\OrderResource;
   use App\Http\Resources\StoreOrderResource;
   use App\Http\Resources\UserOrderResource;
-  use App\Models\Address;
   use App\Models\Order;
   use App\Models\ProductOrder;
   use App\Payloads\WebResponsePayload;
-  use Carbon\Carbon;
+  use Illuminate\Http\Client\ConnectionException;
   use Illuminate\Http\Exceptions\HttpResponseException;
   use Illuminate\Http\JsonResponse;
   use Illuminate\Http\Request;
   use Illuminate\Support\Facades\Auth;
   use Illuminate\Support\Facades\DB;
+  use Illuminate\Support\Facades\Http;
   use Illuminate\Support\Str;
   use Midtrans\Config;
   use Midtrans\Snap;
@@ -137,7 +137,7 @@
       $orderModel = Order::query()->with(['expedition', 'address', 'user'])->where('id', $orderId)->first();
       return response()->json(
         (new WebResponsePayload('Order retrieved succesfully', jsonResource: new OrderResource($orderModel)))
-        ->getJsonResource()
+          ->getJsonResource()
       );
     }
 
@@ -189,7 +189,7 @@
       )->setStatusCode(200);
     }
 
-       public function updateRejectOrder(string $orderId): JsonResponse
+    public function updateRejectOrder(string $orderId): JsonResponse
     {
       Order::query()->where('id', $orderId)->update([
         'status' => OrderStatus::CANCELLED
@@ -198,4 +198,8 @@
         (new WebResponsePayload('Order updated to reject'))->getJsonResource()
       )->setStatusCode(200);
     }
+
+    /**
+     * @throws ConnectionException
+     */
   }

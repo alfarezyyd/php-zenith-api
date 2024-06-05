@@ -24,6 +24,7 @@
       'email',
       'password',
     ];
+    protected $with = ['profile'];
 
     /**
      * The attributes that should be hidden for serialization.
